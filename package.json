@@ -1,0 +1,38 @@
+{
+  "name": "beer-distribution-game",
+  "version": "1.0.0",
+  "description": "Beer Distribution Game implemented on Ethereum blockchain for supply chain visibility research",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "clean": "hardhat clean",
+    "node": "hardhat node",
+    "deploy": "hardhat run scripts/deploy.js",
+    "deploy:local": "hardhat run scripts/deploy-local.js --network localhost",
+    "compare": "hardhat run scripts/compare-policies.js",
+    "compare:random": "hardhat run scripts/compare-policies.js",
+    "compare:constant": "hardhat run scripts/compare-policies-constant.js",
+    "lint": "solhint 'contracts/**/*.sol'",
+    "lint:fix": "solhint 'contracts/**/*.sol' --fix"
+  },
+  "keywords": [
+    "ethereum",
+    "blockchain",
+    "supply-chain",
+    "beer-game",
+    "solidity",
+    "hardhat"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "hardhat": "^2.19.4",
+    "solhint": "^4.0.0"
+  },
+  "dependencies": {
+    "csv-parser": "^3.2.0"
+  }
+}
