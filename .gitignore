@@ -1,0 +1,56 @@
+# Dependency directories
+node_modules/
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Hardhat files
+cache/
+artifacts/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Output of 'npm pack'
+*.tgz
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Hardhat coverage
+coverage
+coverage.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional local network files
+deployments/localhost
+typechain-types/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# Hardhat Ignition default folder for deployments against a local node
+ignition/deployments/chain-31337
