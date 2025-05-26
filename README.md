@@ -28,8 +28,8 @@ npx hardhat compile
 The project includes several Sterman model simulations with different configurations:
 
 ```bash
-# Standard Sterman model (1 week order delay, 1 week shipping delay)
-npx hardhat run scripts/sterman/sterman-simulation.js
+# One-One Delay model (1 week order delay, 1 week shipping delay)
+npx hardhat run scripts/sterman/sterman-one-one-delay-simulation.js
 
 # Two-order delay model (2 week order delay, 1 week shipping delay)
 npx hardhat run scripts/sterman/sterman-two-order-delay-simulation.js
@@ -69,7 +69,7 @@ http://localhost:8000/visualization/sterman-visualization.html
 
 The Sterman visualization tool provides:
 
-- **Simulation Selection**: Choose between different simulation types (standard, two-order-delay, two-shipping-delay, zero-delay, hybrid models)
+- **Simulation Selection**: Choose between different simulation types (one-one-delay, two-order-delay, two-shipping-delay, zero-delay, hybrid models)
 - **Simulation Settings**: View configuration parameters for each simulation
 - **Results Comparison**: Compare the performance of traditional vs. blockchain-enabled supply chains
 - **Detailed Charts**:
@@ -211,7 +211,7 @@ Different combinations of order and shipping delays to simulate various supply c
 - **Zero-One Delay**: 0 week order + 1 week shipping delay
 - **Zero-Two Delay**: 0 week order + 2 week shipping delay
 - **One-Zero Delay**: 1 week order + 0 week shipping delay
-- **Standard**: 1 week order + 1 week shipping delay
+- **One-One Delay**: 1 week order + 1 week shipping delay
 - **One-Two Delay**: 1 week order + 2 week shipping delay
 - **Two-Zero Delay**: 2 week order + 0 week shipping delay
 - **Two-One Delay**: 2 week order + 1 week shipping delay
