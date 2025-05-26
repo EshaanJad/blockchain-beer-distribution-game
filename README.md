@@ -149,16 +149,6 @@ cd beer-distribution-game
 php -S localhost:8000
 ```
 
-## Simulation Parameters
-
-Key parameters that can be adjusted in the simulation scripts:
-
-- **Initial Inventory**: Default is 40 units for all roles (`setInitialInventory(40)`)
-- **Order Delay**: Periods for orders to reach upstream supplier (0-2 weeks)
-- **Shipping Delay**: Periods for shipments to reach downstream partner (1-2 weeks)
-- **Alpha (α)**: Smoothing factor for exponential demand forecasting (0.2-0.8)
-- **Safety Stock Threshold**: Multiplier for standard deviation in safety stock calculation
-
 ## Input Data
 
 The simulation uses two primary data sources:
@@ -217,11 +207,15 @@ Some members use fixed historical order quantities while others use base-stock p
 
 ### Delay Variants
 Different combinations of order and shipping delays to simulate various supply chain configurations:
+- **Zero-Zero Delay**: 0 week order + 0 week shipping delay
+- **Zero-One Delay**: 0 week order + 1 week shipping delay
+- **Zero-Two Delay**: 0 week order + 2 week shipping delay
+- **One-Zero Delay**: 1 week order + 0 week shipping delay
 - **Standard**: 1 week order + 1 week shipping delay
-- **Zero Order Delay**: 0 week order + 1 week shipping delay
 - **One-Two Delay**: 1 week order + 2 week shipping delay
+- **Two-Zero Delay**: 2 week order + 0 week shipping delay
 - **Two-One Delay**: 2 week order + 1 week shipping delay
-- **Two Week Delay**: 0 week order + 2 week shipping delay
+- **Two-Two Delay**: 2 week order + 2 week shipping delay
 
 ## License
 
