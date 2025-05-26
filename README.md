@@ -168,21 +168,40 @@ The simulation uses two primary data sources:
 
 ## Ordering Policy Algorithm
 
-The base-stock ordering policy is implemented in JavaScript and follows these steps:
+This project primarily utilizes Sterman's heuristic ordering policy, as implemented in `scripts/policies/stermanPolicy.js`.
+The core formula is:
 
-1. **Calculate base-stock target level** accounting for lead time, demand mean, variability, and service level
-2. **Calculate local inventory position** = On-hand + On-order - Backorders
-3. **Calculate initial order quantity** = max(0, base-stock target - inventory position)
-4. **Apply adjustment factor (α)** based on blockchain visibility:
-   - Without blockchain: Uses only local information
-   - With blockchain: Adjusts based on end-customer demand and downstream inventory positions
-5. **Calculate final order** = Initial order × adjustment factor
+`O_t = MAX[0, L_hat_t + alpha_S * (S' - S_t - beta * SL_t)]`
+
+Where:
+- `O_t`: Order quantity for the current period.
+- `L_hat_t`: Expected Incoming Orders (Demand Forecast). This is calculated using adaptive expectations: 
+  `L_hat_t = theta * lastReceivedOrder + (1 - theta) * previous_L_hat`
+  - `theta`: Weight for adaptive expectations in demand forecasting.
+  - `lastReceivedOrder`: The actual order quantity received from the downstream partner in the last period.
+  - `previous_L_hat`: The demand forecast calculated in the previous period.
+- `alpha_S`: Stock Adjustment Strength – how aggressively inventory discrepancies are corrected.
+- `S'`: Effective Desired Inventory (Anchor) – the target inventory level.
+- `S_t`: Effective Inventory – calculated as `onHandInventory - backlog`.
+- `beta`: Supply Line Adjustment Fraction – a factor indicating how much of the current supply line (on-order quantity) is considered when adjusting inventory. This parameter often reflects a common misperception in traditional supply chains.
+- `SL_t`: Supply Line – the total quantity of units currently on order but not yet received.
+
+The policy uses default parameters (`DEFAULT_PARAMS` in the script) derived from Sterman's research to represent average subject behavior in the game (e.g., `theta = 0.36`, `alpha_S = 0.26`, `beta = 0.34`, `S' = 0` or another anchor value).
+
+### Blockchain-Enabled Variation
+
+When blockchain visibility is enabled (`calculateStermanBlockchainOrder` function), the policy is modified:
+- The core behavioral parameters (`alpha_S`, `beta`, `S'`) remain the same as the traditional mode, reflecting unchanged decision-making heuristics by the players.
+- The crucial difference is in the calculation of the demand forecast (`L_hat_t`). Instead of using `lastReceivedOrder` from the immediate downstream partner, the adaptive expectations formula uses the **actual current end-customer demand** (made visible by the blockchain) as the input signal.
+  `L_hat_t (blockchain) = theta * currentEndCustomerDemand + (1 - theta) * previous_L_hat`
+
+This allows for a more accurate and timely demand forecast, isolating the impact of improved information visibility while keeping the underlying ordering behavior constant.
 
 ## Cost Structure
 
 The game uses a simple cost structure:
-- **Holding Cost**: $1 per unit per period for inventory
-- **Backlog Cost**: $2 per unit per period for unfulfilled orders
+- **Holding Cost**: $0.50 per unit per period for inventory
+- **Backlog Cost**: $1 per unit per period for unfulfilled orders
 
 Total cost is the sum of holding and backlog costs across all roles and time periods.
 
