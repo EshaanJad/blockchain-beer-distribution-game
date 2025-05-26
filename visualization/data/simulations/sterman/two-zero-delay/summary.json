@@ -1,0 +1,12 @@
+{
+  "DataSource": "two_zero_delay_simulation",
+  "Periods": 69,
+  "TraditionalCost": 1601,
+  "BlockchainCost": 1596,
+  "PlayerGasCostUSD": 1180.0940499999992,
+  "SystemGasCostUSD": 8460.87985,
+  "TotalGasCostUSD": 9640.973899999999,
+  "BlockchainTotalWithGas": 11236.973899999999,
+  "CostReduction": 5,
+  "CostReductionPercent": "0.31"
+}

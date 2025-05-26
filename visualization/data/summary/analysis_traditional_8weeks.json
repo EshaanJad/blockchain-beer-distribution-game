@@ -1,0 +1,710 @@
+{
+  "customer": [
+    {
+      "demand": 3
+    },
+    {
+      "demand": 5
+    },
+    {
+      "demand": 2
+    },
+    {
+      "demand": 6
+    },
+    {
+      "demand": 4
+    },
+    {
+      "demand": 3
+    },
+    {
+      "demand": 5
+    },
+    {
+      "demand": 4
+    }
+  ],
+  "retailer": [
+    {
+      "inventory": 6,
+      "backlog": 0,
+      "onOrder": 8,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 6,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 6,
+      "totalCost": 6,
+      "debugInfo": {
+        "avgDemand": 4,
+        "demandStdDev": 1,
+        "localStdDev": 0.4714045207910317,
+        "leadTime": 2,
+        "previousOrders": "",
+        "incomingOrders": "3,4,4",
+        "usedColdStart": true
+      }
+    },
+    {
+      "inventory": 6,
+      "backlog": 0,
+      "onOrder": 8,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 7,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 8,
+      "totalCost": 14,
+      "debugInfo": {
+        "avgDemand": 5,
+        "demandStdDev": 1,
+        "localStdDev": 1,
+        "leadTime": 2,
+        "previousOrders": "0",
+        "incomingOrders": "3,5",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 7,
+      "backlog": 0,
+      "onOrder": 4,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 6,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 10,
+      "totalCost": 24,
+      "debugInfo": {
+        "avgDemand": 2,
+        "demandStdDev": 1.247219128924647,
+        "localStdDev": 1.247219128924647,
+        "leadTime": 2,
+        "previousOrders": "0,0",
+        "incomingOrders": "3,5,2",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 6,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 4,
+      "backlogEnd": 0,
+      "order": 11,
+      "weeklyCost": 10,
+      "totalCost": 34,
+      "debugInfo": {
+        "avgDemand": 6,
+        "demandStdDev": 1.5811388300841898,
+        "localStdDev": 1.5811388300841898,
+        "leadTime": 2,
+        "previousOrders": "0,0,0",
+        "incomingOrders": "3,5,2,6",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 4,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 0,
+      "backlogEnd": 2,
+      "order": 9,
+      "weeklyCost": 8,
+      "totalCost": 42,
+      "debugInfo": {
+        "avgDemand": 4,
+        "demandStdDev": 1.4142135623730951,
+        "localStdDev": 1.4142135623730951,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,11",
+        "incomingOrders": "3,5,2,6,4",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 0,
+      "backlog": 2,
+      "onOrder": 11,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 5,
+      "backlogEnd": 0,
+      "order": 1,
+      "weeklyCost": 10,
+      "totalCost": 52,
+      "debugInfo": {
+        "avgDemand": 3,
+        "demandStdDev": 1.3437096247164249,
+        "localStdDev": 1.3437096247164249,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,11,9",
+        "incomingOrders": "3,5,2,6,4,3",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 5,
+      "backlog": 0,
+      "onOrder": 3,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 5,
+      "backlogEnd": 0,
+      "order": 6,
+      "weeklyCost": 10,
+      "totalCost": 62,
+      "debugInfo": {
+        "avgDemand": 5,
+        "demandStdDev": 1.3093073414159542,
+        "localStdDev": 1.3093073414159542,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,11,9,1",
+        "incomingOrders": "3,5,2,6,4,3,5",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 5,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 0,
+      "backlogEnd": 0,
+      "order": 7,
+      "weeklyCost": 9,
+      "totalCost": 71,
+      "debugInfo": {
+        "avgDemand": 4,
+        "demandStdDev": 1.224744871391589,
+        "localStdDev": 1.224744871391589,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,11,9,1,6",
+        "incomingOrders": "3,5,2,6,4,3,5,4",
+        "usedColdStart": false
+      }
+    }
+  ],
+  "wholesaler": [
+    {
+      "inventory": 6,
+      "backlog": 0,
+      "onOrder": 8,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 6,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 6,
+      "totalCost": 6,
+      "debugInfo": {
+        "avgDemand": 4,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "",
+        "incomingOrders": "4,4",
+        "usedColdStart": true
+      }
+    },
+    {
+      "inventory": 6,
+      "backlog": 0,
+      "onOrder": 8,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 10,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 8,
+      "totalCost": 14,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0",
+        "incomingOrders": "0",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 10,
+      "backlog": 0,
+      "onOrder": 4,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 14,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 10,
+      "totalCost": 24,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0",
+        "incomingOrders": "0,0",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 14,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 14,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 10,
+      "totalCost": 34,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0,0",
+        "incomingOrders": "0,0,0",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 14,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 3,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 8,
+      "totalCost": 42,
+      "debugInfo": {
+        "avgDemand": 2.75,
+        "demandStdDev": 0,
+        "localStdDev": 4.763139720814412,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0",
+        "incomingOrders": "0,0,0,11",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 3,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 0,
+      "backlogEnd": 6,
+      "order": 5,
+      "weeklyCost": 10,
+      "totalCost": 52,
+      "debugInfo": {
+        "avgDemand": 4,
+        "demandStdDev": 0,
+        "localStdDev": 4.9396356140913875,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0,0",
+        "incomingOrders": "0,0,0,11,9",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 0,
+      "backlog": 6,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 0,
+      "backlogEnd": 7,
+      "order": 13,
+      "weeklyCost": 10,
+      "totalCost": 62,
+      "debugInfo": {
+        "avgDemand": 3.5,
+        "demandStdDev": 0,
+        "localStdDev": 4.645786621588784,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0,0,5",
+        "incomingOrders": "0,0,0,11,9,1",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 0,
+      "backlog": 7,
+      "onOrder": 5,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 0,
+      "backlogEnd": 8,
+      "order": 10,
+      "weeklyCost": 9,
+      "totalCost": 71,
+      "debugInfo": {
+        "avgDemand": 3.857142857142857,
+        "demandStdDev": 0,
+        "localStdDev": 4.389226141639205,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0,0,5,13",
+        "incomingOrders": "0,0,0,11,9,1,6",
+        "usedColdStart": false
+      }
+    }
+  ],
+  "distributor": [
+    {
+      "inventory": 6,
+      "backlog": 0,
+      "onOrder": 8,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 6,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 6,
+      "totalCost": 6,
+      "debugInfo": {
+        "avgDemand": 4,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "",
+        "incomingOrders": "4,4",
+        "usedColdStart": true
+      }
+    },
+    {
+      "inventory": 6,
+      "backlog": 0,
+      "onOrder": 8,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 10,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 8,
+      "totalCost": 14,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0",
+        "incomingOrders": "0",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 10,
+      "backlog": 0,
+      "onOrder": 4,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 14,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 10,
+      "totalCost": 24,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0",
+        "incomingOrders": "0,0",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 14,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 14,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 10,
+      "totalCost": 34,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0,0",
+        "incomingOrders": "0,0,0",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 14,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 14,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 8,
+      "totalCost": 42,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0",
+        "incomingOrders": "0,0,0,0",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 14,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 14,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 10,
+      "totalCost": 52,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0,0",
+        "incomingOrders": "0,0,0,0,0",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 14,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 9,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 10,
+      "totalCost": 62,
+      "debugInfo": {
+        "avgDemand": 0.8333333333333334,
+        "demandStdDev": 0,
+        "localStdDev": 1.863389981249825,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0,0,0",
+        "incomingOrders": "0,0,0,0,0,5",
+        "usedColdStart": false
+      }
+    },
+    {
+      "inventory": 9,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 0,
+      "backlogEnd": 4,
+      "order": 0,
+      "weeklyCost": 9,
+      "totalCost": 71,
+      "debugInfo": {
+        "avgDemand": 2.5714285714285716,
+        "demandStdDev": 0,
+        "localStdDev": 4.593695768803865,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0,0,0,0",
+        "incomingOrders": "0,0,0,0,0,5,13",
+        "usedColdStart": false
+      }
+    }
+  ],
+  "factory": [
+    {
+      "inventory": 6,
+      "backlog": 0,
+      "onOrder": 8,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 6,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 6,
+      "totalCost": 6,
+      "debugInfo": {
+        "avgDemand": 4,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "",
+        "incomingOrders": "4,4"
+      }
+    },
+    {
+      "inventory": 6,
+      "backlog": 0,
+      "onOrder": 4,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 6,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 8,
+      "totalCost": 14,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0",
+        "incomingOrders": "0"
+      }
+    },
+    {
+      "inventory": 6,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 6,
+      "backlogEnd": 0,
+      "order": 2,
+      "weeklyCost": 10,
+      "totalCost": 24,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0",
+        "incomingOrders": "0,0"
+      }
+    },
+    {
+      "inventory": 6,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 8,
+      "backlogEnd": 0,
+      "order": 2,
+      "weeklyCost": 10,
+      "totalCost": 34,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0,0",
+        "incomingOrders": "0,0,0"
+      }
+    },
+    {
+      "inventory": 8,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 10,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 8,
+      "totalCost": 42,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0",
+        "incomingOrders": "0,0,0,0"
+      }
+    },
+    {
+      "inventory": 10,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 10,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 10,
+      "totalCost": 52,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0,0",
+        "incomingOrders": "0,0,0,0,0"
+      }
+    },
+    {
+      "inventory": 10,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 10,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 10,
+      "totalCost": 62,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0,0,0",
+        "incomingOrders": "0,0,0,0,0,0"
+      }
+    },
+    {
+      "inventory": 10,
+      "backlog": 0,
+      "onOrder": 0,
+      "incomingShipment": 0,
+      "outgoingShipment": 0,
+      "inventoryEnd": 10,
+      "backlogEnd": 0,
+      "order": 0,
+      "weeklyCost": 9,
+      "totalCost": 71,
+      "debugInfo": {
+        "avgDemand": 0,
+        "demandStdDev": 0,
+        "localStdDev": 0,
+        "leadTime": 2,
+        "previousOrders": "0,0,0,0,0,0,0",
+        "incomingOrders": "0,0,0,0,0,0,0"
+      }
+    }
+  ],
+  "totalCost": [
+    24,
+    33,
+    40,
+    40,
+    31,
+    41,
+    38,
+    34
+  ]
+}

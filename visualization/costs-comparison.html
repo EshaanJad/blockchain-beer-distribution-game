@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Costs Comparison - Beer Distribution Game</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .visualization-section {
+            margin-bottom: 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .chart-container {
+            margin-top: 20px;
+            width: 100%;
+            overflow: visible;
+        }
+        .single-chart {
+            margin-bottom: 30px;
+            height: 400px;
+            width: 100%;
+            position: relative;
+        }
+        .experiment-block {
+            margin-bottom: 80px;
+            padding-bottom: 40px;
+            border-bottom: 1px dashed #ccc;
+            clear: both;
+        }
+        .experiment-block:last-child {
+            border-bottom: none;
+            margin-bottom: 20px;
+        }
+        .table-container {
+            margin-top: 60px;
+            margin-bottom: 40px;
+            clear: both;
+        }
+        .overall-header {
+            margin-top: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .comparison-table th {
+            background-color: #f2f2f2;
+        }
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .positive-change {
+            color: green;
+        }
+        .negative-change {
+            color: red;
+        }
+        .experiment-selector {
+            margin: 20px 0;
+        }
+        .experiment-selector select {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+        .export-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+        .export-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="sterman-visualization.html">Sterman Visualization</a>
+            <a href="visualization.html">Original Visualization</a>
+        </div>
+        
+        <h1>Cost Comparison Across Experiments</h1>
+        
+        <div class="visualization-section">
+            <h2>Cumulative Costs by Role</h2>
+            <p>This visualization compares the total cumulative costs for each role (Retailer, Wholesaler, Distributor, Factory) in traditional versus blockchain implementations across different experiment types.</p>
+            
+            <div class="experiment-selector">
+                <select id="experimentSelect" class="scenario-select">
+                    <option value="all">All Experiments</option>
+                    <option value="standard">Standard Sterman Model</option>
+                    <option value="two-order-delay">Two-Order Delay Model</option>
+                    <option value="two-shipping-delay">Two-Shipping Delay Model</option>
+                    <option value="zero-delay">Zero Delay Model</option>
+                    <option value="zero-order-two-shipping-delay">Zero Order Two Shipping Delay Model</option>
+                    <option value="two-order-two-shipping-delay">Two Order Two Shipping Delay Model</option>
+                    <option value="hybrid-retailer">Hybrid Retailer Model</option>
+                    <option value="hybrid-retailer-wholesaler">Hybrid Retailer-Wholesaler Model</option>
+                    <option value="hybrid-factory">Hybrid Factory Model</option>
+                </select>
+                <button id="exportButton" class="export-button">Export to Excel</button>
+            </div>
+            
+            <div id="costCharts">
+                <!-- Charts will be rendered here -->
+            </div>
+            
+            <div id="costTables">
+                <!-- Tables will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulation data paths
+        const experimentPaths = {
+            'standard': {
+                blockchain: 'data/simulations/sterman/standard/blockchain.json',
+                traditional: 'data/simulations/sterman/standard/traditional.json',
+                description: 'Standard Sterman Model'
+            },
+            'two-order-delay': {
+                blockchain: 'data/simulations/sterman/two-order-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/two-order-delay/traditional.json',
+                description: 'Two-Order Delay Model'
+            },
+            'two-shipping-delay': {
+                blockchain: 'data/simulations/sterman/two-shipping-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/two-shipping-delay/traditional.json',
+                description: 'Two-Shipping Delay Model'
+            },
+            'zero-delay': {
+                blockchain: 'data/simulations/sterman/zero-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/zero-delay/traditional.json',
+                description: 'Zero Delay Model'
+            },
+            'zero-order-two-shipping-delay': {
+                blockchain: 'data/simulations/sterman/zero-order-two-shipping-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/zero-order-two-shipping-delay/traditional.json',
+                description: 'Zero Order Two Shipping Delay Model'
+            },
+            'two-order-two-shipping-delay': {
+                blockchain: 'data/simulations/sterman/two-order-two-shipping-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/two-order-two-shipping-delay/traditional.json',
+                description: 'Two Order Two Shipping Delay Model'
+            },
+            'hybrid-retailer': {
+                blockchain: 'data/simulations/sterman/hybrid-retailer/blockchain.json',
+                traditional: 'data/simulations/sterman/hybrid-retailer/traditional.json',
+                description: 'Hybrid Retailer Model'
+            },
+            'hybrid-retailer-wholesaler': {
+                blockchain: 'data/simulations/sterman/hybrid-retailer-wholesaler/blockchain.json',
+                traditional: 'data/simulations/sterman/hybrid-retailer-wholesaler/traditional.json',
+                description: 'Hybrid Retailer-Wholesaler Model'
+            },
+            'hybrid-factory': {
+                blockchain: 'data/simulations/sterman/hybrid-factory/blockchain.json',
+                traditional: 'data/simulations/sterman/hybrid-factory/traditional.json',
+                description: 'Hybrid Factory Model'
+            }
+        };
+
+        // Role names and colors for visualization
+        const roles = [
+            { id: 0, name: 'Retailer', color: '#1f77b4' },
+            { id: 1, name: 'Wholesaler', color: '#ff7f0e' },
+            { id: 2, name: 'Distributor', color: '#2ca02c' },
+            { id: 3, name: 'Factory', color: '#d62728' }
+        ];
+
+        // Store all experiment data
+        let allExperimentData = {};
+        
+        // Function to load all experiment data
+        async function loadAllExperimentData() {
+            const experimentKeys = Object.keys(experimentPaths);
+            const promises = [];
+            
+            for (const experimentKey of experimentKeys) {
+                const experimentPromise = loadExperimentData(experimentKey);
+                promises.push(experimentPromise);
+            }
+            
+            await Promise.all(promises);
+            
+            // After all data is loaded, render the default view
+            renderExperimentData('all');
+        }
+        
+        // Function to load a single experiment's data
+        async function loadExperimentData(experimentKey) {
+            try {
+                const paths = experimentPaths[experimentKey];
+                
+                // Load blockchain data
+                const blockchainResponse = await fetch(paths.blockchain);
+                const blockchainData = await blockchainResponse.json();
+                
+                // Load traditional data
+                const traditionalResponse = await fetch(paths.traditional);
+                const traditionalData = await traditionalResponse.json();
+                
+                // Calculate cumulative costs for each role
+                const costs = calculateCumulativeCosts(blockchainData, traditionalData);
+                
+                // Store the data
+                allExperimentData[experimentKey] = {
+                    blockchain: blockchainData,
+                    traditional: traditionalData,
+                    costs: costs
+                };
+                
+                console.log(`Loaded experiment data: ${experimentKey}`);
+            } catch (error) {
+                console.error(`Error loading experiment data for ${experimentKey}:`, error);
+            }
+        }
+        
+        // Function to calculate cumulative costs
+        function calculateCumulativeCosts(blockchainData, traditionalData) {
+            // Get the final cumulative costs for each role
+            const finalWeek = Math.min(blockchainData.length - 1, traditionalData.length - 1);
+            
+            const blockchainCosts = blockchainData[finalWeek].cumulativeCost;
+            const traditionalCosts = traditionalData[finalWeek].cumulativeCost;
+            
+            // Calculate total costs and percentage changes
+            const costData = [];
+            
+            for (let i = 0; i < roles.length; i++) {
+                const blockchainCost = blockchainCosts[i] || 0;
+                const traditionalCost = traditionalCosts[i] || 0;
+                const difference = traditionalCost - blockchainCost;
+                const percentChange = (difference / traditionalCost) * 100;
+                
+                costData.push({
+                    role: roles[i].name,
+                    roleId: i,
+                    blockchain: blockchainCost,
+                    traditional: traditionalCost,
+                    difference: difference,
+                    percentChange: percentChange
+                });
+            }
+            
+            // Calculate total across all roles
+            const totalBlockchain = blockchainCosts.reduce((sum, cost) => sum + cost, 0);
+            const totalTraditional = traditionalCosts.reduce((sum, cost) => sum + cost, 0);
+            const totalDifference = totalTraditional - totalBlockchain;
+            const totalPercentChange = (totalDifference / totalTraditional) * 100;
+            
+            costData.push({
+                role: 'Total',
+                roleId: -1,
+                blockchain: totalBlockchain,
+                traditional: totalTraditional,
+                difference: totalDifference,
+                percentChange: totalPercentChange
+            });
+            
+            return costData;
+        }
+        
+        // Function to render the experiment data
+        function renderExperimentData(experimentKey) {
+            if (experimentKey === 'all') {
+                renderAllExperiments();
+            } else {
+                renderSingleExperiment(experimentKey);
+            }
+        }
+        
+        // Function to render a bar chart for a single experiment
+        function renderSingleExperiment(experimentKey) {
+            const data = allExperimentData[experimentKey];
+            if (!data) {
+                console.error(`No data available for experiment: ${experimentKey}`);
+                return;
+            }
+            
+            // Clear containers
+            document.getElementById('costCharts').innerHTML = '';
+            document.getElementById('costTables').innerHTML = '';
+            
+            // Create experiment block to contain both chart and table
+            const experimentBlock = document.createElement('div');
+            experimentBlock.className = 'experiment-block';
+            document.getElementById('costCharts').appendChild(experimentBlock);
+            
+            // Create chart container
+            const chartContainer = document.createElement('div');
+            chartContainer.className = 'single-chart';
+            experimentBlock.appendChild(chartContainer);
+            
+            // Render bar chart
+            renderBarChart(chartContainer, data.costs, experimentPaths[experimentKey].description);
+            
+            // Create table container directly in the same block
+            const tableContainer = document.createElement('div');
+            tableContainer.className = 'table-container';
+            experimentBlock.appendChild(tableContainer);
+            
+            // Render data table
+            renderCostTable(tableContainer, data.costs, experimentPaths[experimentKey].description);
+        }
+        
+        // Function to render bar charts for all experiments
+        function renderAllExperiments() {
+            // Clear containers
+            document.getElementById('costCharts').innerHTML = '';
+            document.getElementById('costTables').innerHTML = '';
+            
+            // Create container for the overall comparison
+            const comparisonContainer = document.createElement('div');
+            comparisonContainer.className = 'overall-header';
+            comparisonContainer.innerHTML = '<h3>Overall Cost Comparison Across All Experiments</h3>';
+            document.getElementById('costCharts').appendChild(comparisonContainer);
+            
+            // Render bar chart for each experiment
+            const experimentKeys = Object.keys(experimentPaths);
+            
+            for (const experimentKey of experimentKeys) {
+                const data = allExperimentData[experimentKey];
+                if (!data) continue;
+                
+                // Create experiment block to contain both chart and table
+                const experimentBlock = document.createElement('div');
+                experimentBlock.className = 'experiment-block';
+                document.getElementById('costCharts').appendChild(experimentBlock);
+                
+                const experimentTitle = document.createElement('h3');
+                experimentTitle.textContent = experimentPaths[experimentKey].description;
+                experimentBlock.appendChild(experimentTitle);
+                
+                // Create chart container
+                const chartContainer = document.createElement('div');
+                chartContainer.className = 'single-chart';
+                experimentBlock.appendChild(chartContainer);
+                
+                // Render bar chart
+                renderBarChart(chartContainer, data.costs, experimentPaths[experimentKey].description);
+                
+                // Create table container directly in the same block
+                const tableContainer = document.createElement('div');
+                tableContainer.className = 'table-container';
+                experimentBlock.appendChild(tableContainer);
+                
+                // Render data table
+                renderCostTable(tableContainer, data.costs, experimentPaths[experimentKey].description);
+            }
+        }
+        
+        // Function to render a bar chart
+        function renderBarChart(container, costData, title) {
+            // Filter out the "Total" row for the chart
+            const chartData = costData.filter(d => d.role !== 'Total');
+            
+            // Set up dimensions and margins
+            const margin = { top: 50, right: 150, bottom: 80, left: 80 };
+            const width = container.clientWidth - margin.left - margin.right;
+            const height = container.clientHeight - margin.top - margin.bottom;
+            
+            // Remove any existing SVG
+            d3.select(container).selectAll('svg').remove();
+            
+            // Create SVG
+            const svg = d3.select(container)
+                .append('svg')
+                .attr('width', container.clientWidth)
+                .attr('height', container.clientHeight)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+            
+            // Add title (commenting out as we have the h3 title above the chart)
+            /* svg.append('text')
+                .attr('x', width / 2)
+                .attr('y', -20)
+                .attr('text-anchor', 'middle')
+                .style('font-size', '16px')
+                .style('font-weight', 'bold')
+                .text(title); */
+            
+            // Set up scales
+            const x0 = d3.scaleBand()
+                .domain(chartData.map(d => d.role))
+                .rangeRound([0, width])
+                .paddingInner(0.1);
+            
+            const x1 = d3.scaleBand()
+                .domain(['Traditional', 'Blockchain'])
+                .rangeRound([0, x0.bandwidth()])
+                .padding(0.05);
+            
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(chartData, d => Math.max(d.traditional, d.blockchain)) * 1.1])
+                .range([height, 0]);
+            
+            // Define colors
+            const colors = {
+                Traditional: '#d62728', // Red
+                Blockchain: '#1f77b4'   // Blue
+            };
+            
+            // Add x axis
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x0))
+                .selectAll('text')
+                .style('text-anchor', 'middle');
+            
+            // Add y axis
+            svg.append('g')
+                .call(d3.axisLeft(y).ticks(10));
+            
+            // Add y axis label
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', -60)
+                .attr('x', -(height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .text('Cumulative Cost');
+            
+            // Create groups for each role
+            const roleGroups = svg.selectAll('.role-group')
+                .data(chartData)
+                .enter().append('g')
+                .attr('class', 'role-group')
+                .attr('transform', d => `translate(${x0(d.role)},0)`);
+            
+            // Add bars for traditional costs
+            roleGroups.append('rect')
+                .attr('x', x1('Traditional'))
+                .attr('width', x1.bandwidth())
+                .attr('y', d => y(d.traditional))
+                .attr('height', d => height - y(d.traditional))
+                .attr('fill', colors.Traditional);
+            
+            // Add bars for blockchain costs
+            roleGroups.append('rect')
+                .attr('x', x1('Blockchain'))
+                .attr('width', x1.bandwidth())
+                .attr('y', d => y(d.blockchain))
+                .attr('height', d => height - y(d.blockchain))
+                .attr('fill', colors.Blockchain);
+            
+            // Add cost values on top of the bars
+            roleGroups.selectAll('.bar-label')
+                .data(d => [
+                    { type: 'Traditional', value: d.traditional },
+                    { type: 'Blockchain', value: d.blockchain }
+                ])
+                .enter().append('text')
+                .attr('class', 'bar-label')
+                .attr('x', d => x1(d.type) + x1.bandwidth() / 2)
+                .attr('y', d => y(d.value) - 5)
+                .attr('text-anchor', 'middle')
+                .style('font-size', '10px')
+                .text(d => d.value.toFixed(1));
+            
+            // Add percentage change labels for each role
+            roleGroups.append('text')
+                .attr('x', x0.bandwidth() / 2)
+                .attr('y', d => y(Math.max(d.traditional, d.blockchain)) - 20)
+                .attr('text-anchor', 'middle')
+                .style('font-size', '11px')
+                .style('font-weight', 'bold')
+                .style('fill', d => d.percentChange > 0 ? 'green' : 'red')
+                .text(d => `${d.percentChange > 0 ? '↓' : '↑'} ${Math.abs(d.percentChange).toFixed(2)}%`);
+            
+            // Add legend
+            const legend = svg.append('g')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', 10)
+                .attr('text-anchor', 'start')
+                .selectAll('g')
+                .data(Object.keys(colors))
+                .enter().append('g')
+                .attr('transform', (d, i) => `translate(${width + 10},${i * 20})`);
+            
+            legend.append('rect')
+                .attr('x', 0)
+                .attr('width', 19)
+                .attr('height', 19)
+                .attr('fill', d => colors[d]);
+            
+            legend.append('text')
+                .attr('x', 24)
+                .attr('y', 9.5)
+                .attr('dy', '0.32em')
+                .text(d => d);
+        }
+        
+        // Function to render a cost table
+        function renderCostTable(container, costData, title) {
+            // Create table container
+            const tableTitle = document.createElement('h3');
+            tableTitle.textContent = `${title} - Cost Comparison`;
+            container.appendChild(tableTitle);
+            
+            // Create table
+            const table = document.createElement('table');
+            table.className = 'comparison-table';
+            
+            // Create table header
+            const thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr>
+                    <th>Role</th>
+                    <th>Traditional Cost</th>
+                    <th>Blockchain Cost</th>
+                    <th>Difference</th>
+                    <th>Change (%)</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+            
+            // Create table body
+            const tbody = document.createElement('tbody');
+            
+            // Add rows for each role and total
+            for (const item of costData) {
+                const row = document.createElement('tr');
+                row.style.fontWeight = item.role === 'Total' ? 'bold' : 'normal';
+                
+                // Role name
+                const roleCell = document.createElement('td');
+                roleCell.textContent = item.role;
+                row.appendChild(roleCell);
+                
+                // Traditional cost
+                const traditionalCell = document.createElement('td');
+                traditionalCell.textContent = item.traditional.toFixed(2);
+                row.appendChild(traditionalCell);
+                
+                // Blockchain cost
+                const blockchainCell = document.createElement('td');
+                blockchainCell.textContent = item.blockchain.toFixed(2);
+                row.appendChild(blockchainCell);
+                
+                // Difference
+                const differenceCell = document.createElement('td');
+                differenceCell.textContent = item.difference.toFixed(2);
+                differenceCell.className = item.difference > 0 ? 'positive-change' : 'negative-change';
+                row.appendChild(differenceCell);
+                
+                // Percentage change
+                const percentCell = document.createElement('td');
+                percentCell.textContent = `${item.percentChange.toFixed(2)}%`;
+                percentCell.className = item.percentChange > 0 ? 'positive-change' : 'negative-change';
+                row.appendChild(percentCell);
+                
+                tbody.appendChild(row);
+            }
+            
+            table.appendChild(tbody);
+            container.appendChild(table);
+        }
+        
+        // Function to export cost comparison data to Excel
+        function exportToExcel() {
+            // Create a new workbook
+            const wb = XLSX.utils.book_new();
+            
+            // Create a summary sheet that combines all experiment data
+            createSummaryWorksheet(wb);
+            
+            // Create worksheets for each experiment
+            for (const experimentKey in allExperimentData) {
+                const data = allExperimentData[experimentKey];
+                if (!data) continue;
+                
+                // Prepare data for export
+                const exportData = data.costs.map(item => ({
+                    'Role': item.role,
+                    'Traditional Cost': Number(item.traditional.toFixed(2)),
+                    'Blockchain Cost': Number(item.blockchain.toFixed(2)),
+                    'Difference': Number(item.difference.toFixed(2)),
+                    'Change (%)': `${item.percentChange.toFixed(2)}%`
+                }));
+                
+                // Create worksheet
+                const ws = XLSX.utils.json_to_sheet(exportData);
+                
+                // Set column widths
+                const colWidths = [
+                    { wch: 15 }, // Role
+                    { wch: 18 }, // Traditional Cost
+                    { wch: 18 }, // Blockchain Cost
+                    { wch: 15 }, // Difference
+                    { wch: 15 }  // Change (%)
+                ];
+                ws['!cols'] = colWidths;
+                
+                // Add header formatting (bold)
+                const headerRange = XLSX.utils.decode_range(ws['!ref']);
+                for (let C = headerRange.s.c; C <= headerRange.e.c; ++C) {
+                    const headerCell = XLSX.utils.encode_cell({ r: 0, c: C });
+                    if (!ws[headerCell]) continue;
+                    if (!ws[headerCell].s) ws[headerCell].s = {};
+                    ws[headerCell].s.font = { bold: true };
+                }
+                
+                // Highlight the Total row with bold
+                for (let i = 0; i < exportData.length; i++) {
+                    if (exportData[i].Role === 'Total') {
+                        for (let C = headerRange.s.c; C <= headerRange.e.c; ++C) {
+                            const cell = XLSX.utils.encode_cell({ r: i + 1, c: C });
+                            if (!ws[cell]) continue;
+                            if (!ws[cell].s) ws[cell].s = {};
+                            ws[cell].s.font = { bold: true };
+                        }
+                    }
+                }
+                
+                // Add worksheet to workbook
+                const experimentName = experimentPaths[experimentKey].description.substring(0, 31); // Excel has a 31 char limit for sheet names
+                XLSX.utils.book_append_sheet(wb, ws, experimentName);
+            }
+            
+            // Generate file name with date
+            const dateStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+            const fileName = `Cost_Comparison_${dateStr}.xlsx`;
+            
+            // Export the workbook
+            XLSX.writeFile(wb, fileName);
+        }
+        
+        // Function to create a summary worksheet comparing all experiments
+        function createSummaryWorksheet(workbook) {
+            // Create data structure for the summary
+            const experimentKeys = Object.keys(experimentPaths);
+            const summaryData = [];
+            
+            // Add header row
+            const headerRow = {
+                'Experiment': 'Experiment Type',
+                'TradRetailer': 'Retailer (Trad)',
+                'BCRetailer': 'Retailer (BC)',
+                'RetailerChange': 'Retailer Change (%)',
+                'TradWholesaler': 'Wholesaler (Trad)',
+                'BCWholesaler': 'Wholesaler (BC)',
+                'WholesalerChange': 'Wholesaler Change (%)',
+                'TradDistributor': 'Distributor (Trad)',
+                'BCDistributor': 'Distributor (BC)',
+                'DistributorChange': 'Distributor Change (%)',
+                'TradFactory': 'Factory (Trad)',
+                'BCFactory': 'Factory (BC)',
+                'FactoryChange': 'Factory Change (%)',
+                'TradTotal': 'Total (Trad)',
+                'BCTotal': 'Total (BC)',
+                'TotalChange': 'Total Change (%)'
+            };
+            summaryData.push(headerRow);
+            
+            // Add data for each experiment
+            for (const experimentKey of experimentKeys) {
+                const data = allExperimentData[experimentKey];
+                if (!data) continue;
+                
+                const experimentRow = {
+                    'Experiment': experimentPaths[experimentKey].description
+                };
+                
+                // Add data for each role
+                data.costs.forEach(item => {
+                    if (item.role === 'Retailer') {
+                        experimentRow['TradRetailer'] = Number(item.traditional.toFixed(2));
+                        experimentRow['BCRetailer'] = Number(item.blockchain.toFixed(2));
+                        experimentRow['RetailerChange'] = `${item.percentChange.toFixed(2)}%`;
+                    } else if (item.role === 'Wholesaler') {
+                        experimentRow['TradWholesaler'] = Number(item.traditional.toFixed(2));
+                        experimentRow['BCWholesaler'] = Number(item.blockchain.toFixed(2));
+                        experimentRow['WholesalerChange'] = `${item.percentChange.toFixed(2)}%`;
+                    } else if (item.role === 'Distributor') {
+                        experimentRow['TradDistributor'] = Number(item.traditional.toFixed(2));
+                        experimentRow['BCDistributor'] = Number(item.blockchain.toFixed(2));
+                        experimentRow['DistributorChange'] = `${item.percentChange.toFixed(2)}%`;
+                    } else if (item.role === 'Factory') {
+                        experimentRow['TradFactory'] = Number(item.traditional.toFixed(2));
+                        experimentRow['BCFactory'] = Number(item.blockchain.toFixed(2));
+                        experimentRow['FactoryChange'] = `${item.percentChange.toFixed(2)}%`;
+                    } else if (item.role === 'Total') {
+                        experimentRow['TradTotal'] = Number(item.traditional.toFixed(2));
+                        experimentRow['BCTotal'] = Number(item.blockchain.toFixed(2));
+                        experimentRow['TotalChange'] = `${item.percentChange.toFixed(2)}%`;
+                    }
+                });
+                
+                summaryData.push(experimentRow);
+            }
+            
+            // Create worksheet from data
+            const ws = XLSX.utils.json_to_sheet(summaryData);
+            
+            // Set column widths
+            const colWidths = [
+                { wch: 30 }, // Experiment
+                { wch: 15 }, // Retailer (Trad)
+                { wch: 15 }, // Retailer (BC)
+                { wch: 18 }, // Retailer Change (%)
+                { wch: 15 }, // Wholesaler (Trad)
+                { wch: 15 }, // Wholesaler (BC)
+                { wch: 18 }, // Wholesaler Change (%)
+                { wch: 15 }, // Distributor (Trad)
+                { wch: 15 }, // Distributor (BC)
+                { wch: 18 }, // Distributor Change (%)
+                { wch: 15 }, // Factory (Trad)
+                { wch: 15 }, // Factory (BC)
+                { wch: 18 }, // Factory Change (%)
+                { wch: 15 }, // Total (Trad)
+                { wch: 15 }, // Total (BC)
+                { wch: 18 }  // Total Change (%)
+            ];
+            ws['!cols'] = colWidths;
+            
+            // Add header formatting (bold)
+            const headerRange = XLSX.utils.decode_range(ws['!ref']);
+            for (let C = headerRange.s.c; C <= headerRange.e.c; ++C) {
+                const headerCell = XLSX.utils.encode_cell({ r: 0, c: C });
+                if (!ws[headerCell]) continue;
+                if (!ws[headerCell].s) ws[headerCell].s = {};
+                ws[headerCell].s.font = { bold: true };
+            }
+            
+            // Add worksheet to workbook (as the first sheet)
+            XLSX.utils.book_append_sheet(workbook, ws, 'Summary', true);
+        }
+        
+        // Initialize the visualization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load all experiment data
+            loadAllExperimentData();
+            
+            // Set up experiment selector
+            document.getElementById('experimentSelect').addEventListener('change', function() {
+                renderExperimentData(this.value);
+            });
+            
+            // Set up export button
+            document.getElementById('exportButton').addEventListener('click', exportToExcel);
+        });
+    </script>
+</body>
+</html> 

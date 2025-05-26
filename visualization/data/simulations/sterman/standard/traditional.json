@@ -1,0 +1,4004 @@
+[
+  {
+    "week": 0,
+    "inventory": [
+      5,
+      12,
+      12,
+      16
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      5,
+      5,
+      4
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      2.5,
+      6,
+      6,
+      8
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      2.5,
+      6,
+      6,
+      8
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      2.5,
+      6,
+      6,
+      8
+    ]
+  },
+  {
+    "week": 1,
+    "inventory": [
+      3,
+      10,
+      11,
+      19
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      7,
+      5,
+      5,
+      4
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      1.5,
+      5,
+      5.5,
+      9.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      4,
+      11,
+      11.5,
+      17.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      1.5,
+      5,
+      5.5,
+      9.5
+    ]
+  },
+  {
+    "week": 2,
+    "inventory": [
+      7,
+      12,
+      15,
+      18
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      6,
+      5,
+      4
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      3.5,
+      6,
+      7.5,
+      9
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      7.5,
+      17,
+      19,
+      26.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      3.5,
+      6,
+      7.5,
+      9
+    ]
+  },
+  {
+    "week": 3,
+    "inventory": [
+      8,
+      9,
+      14,
+      17
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      7,
+      7,
+      5,
+      4
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      4,
+      4.5,
+      7,
+      8.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      11.5,
+      21.5,
+      26,
+      35
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      4,
+      4.5,
+      7,
+      8.5
+    ]
+  },
+  {
+    "week": 4,
+    "inventory": [
+      10,
+      8,
+      12,
+      16
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      7,
+      8,
+      6,
+      4
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      4,
+      6,
+      8
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      16.5,
+      25.5,
+      32,
+      43
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      4,
+      6,
+      8
+    ]
+  },
+  {
+    "week": 5,
+    "inventory": [
+      12,
+      8,
+      9,
+      14
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      8,
+      7,
+      5
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      4,
+      4.5,
+      7
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      22.5,
+      29.5,
+      36.5,
+      50
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      4,
+      4.5,
+      7
+    ]
+  },
+  {
+    "week": 6,
+    "inventory": [
+      14,
+      10,
+      7,
+      12
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      5,
+      7,
+      8,
+      6
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      7,
+      5,
+      3.5,
+      6
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      29.5,
+      34.5,
+      40,
+      56
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      7,
+      5,
+      3.5,
+      6
+    ]
+  },
+  {
+    "week": 7,
+    "inventory": [
+      14,
+      13,
+      7,
+      10
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      5,
+      6,
+      8,
+      7
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      7,
+      6.5,
+      3.5,
+      5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      36.5,
+      41,
+      43.5,
+      61
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      7,
+      6.5,
+      3.5,
+      5
+    ]
+  },
+  {
+    "week": 8,
+    "inventory": [
+      13,
+      15,
+      9,
+      9
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      6,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6.5,
+      7.5,
+      4.5,
+      4.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      43,
+      48.5,
+      48,
+      65.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6.5,
+      7.5,
+      4.5,
+      4.5
+    ]
+  },
+  {
+    "week": 9,
+    "inventory": [
+      12,
+      15,
+      11,
+      9
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      5,
+      7,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      7.5,
+      5.5,
+      4.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      49,
+      56,
+      53.5,
+      70
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      7.5,
+      5.5,
+      4.5
+    ]
+  },
+  {
+    "week": 10,
+    "inventory": [
+      13,
+      15,
+      14,
+      11
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      5,
+      6,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6.5,
+      7.5,
+      7,
+      5.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      55.5,
+      63.5,
+      60.5,
+      75.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6.5,
+      7.5,
+      7,
+      5.5
+    ]
+  },
+  {
+    "week": 11,
+    "inventory": [
+      13,
+      14,
+      16,
+      14
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      6,
+      5,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6.5,
+      7,
+      8,
+      7
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      62,
+      70.5,
+      68.5,
+      82.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6.5,
+      7,
+      8,
+      7
+    ]
+  },
+  {
+    "week": 12,
+    "inventory": [
+      13,
+      13,
+      16,
+      17
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      6,
+      5,
+      6
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6.5,
+      6.5,
+      8,
+      8.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      68.5,
+      77,
+      76.5,
+      91
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6.5,
+      6.5,
+      8,
+      8.5
+    ]
+  },
+  {
+    "week": 13,
+    "inventory": [
+      13,
+      13,
+      15,
+      18
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      6,
+      5,
+      5
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6.5,
+      6.5,
+      7.5,
+      9
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      75,
+      83.5,
+      84,
+      100
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6.5,
+      6.5,
+      7.5,
+      9
+    ]
+  },
+  {
+    "week": 14,
+    "inventory": [
+      13,
+      13,
+      14,
+      18
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      6,
+      6,
+      5
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6.5,
+      6.5,
+      7,
+      9
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      81.5,
+      90,
+      91,
+      109
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6.5,
+      6.5,
+      7,
+      9
+    ]
+  },
+  {
+    "week": 15,
+    "inventory": [
+      13,
+      13,
+      13,
+      17
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      6,
+      6,
+      5
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6.5,
+      6.5,
+      6.5,
+      8.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      88,
+      96.5,
+      97.5,
+      117.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6.5,
+      6.5,
+      6.5,
+      8.5
+    ]
+  },
+  {
+    "week": 16,
+    "inventory": [
+      13,
+      13,
+      13,
+      16
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      6,
+      6,
+      5
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6.5,
+      6.5,
+      6.5,
+      8
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      94.5,
+      103,
+      104,
+      125.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6.5,
+      6.5,
+      6.5,
+      8
+    ]
+  },
+  {
+    "week": 17,
+    "inventory": [
+      12,
+      13,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      6.5,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      100.5,
+      109.5,
+      110.5,
+      133
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      6.5,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 18,
+    "inventory": [
+      12,
+      13,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      6.5,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      106.5,
+      116,
+      117,
+      140.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      6.5,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 19,
+    "inventory": [
+      12,
+      13,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      6.5,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      112.5,
+      122.5,
+      123.5,
+      148
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      6.5,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 20,
+    "inventory": [
+      11,
+      13,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      7,
+      6,
+      6,
+      6
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      6.5,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      118,
+      129,
+      130,
+      155.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      6.5,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 21,
+    "inventory": [
+      10,
+      12,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      7,
+      6,
+      6,
+      6
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      6,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      123,
+      135,
+      136.5,
+      163
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      6,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 22,
+    "inventory": [
+      11,
+      11,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      7,
+      7,
+      6,
+      6
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      5.5,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      128.5,
+      140.5,
+      143,
+      170.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      5.5,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 23,
+    "inventory": [
+      11,
+      10,
+      12,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      7,
+      7,
+      6,
+      6
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      5,
+      6,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      134,
+      145.5,
+      149,
+      178
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      5,
+      6,
+      7.5
+    ]
+  },
+  {
+    "week": 24,
+    "inventory": [
+      10,
+      10,
+      11,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      7,
+      7,
+      7,
+      6
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      5,
+      5.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      139,
+      150.5,
+      154.5,
+      185.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      5,
+      5.5,
+      7.5
+    ]
+  },
+  {
+    "week": 25,
+    "inventory": [
+      9,
+      10,
+      10,
+      14
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      7,
+      7,
+      6
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      4.5,
+      5,
+      5,
+      7
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      143.5,
+      155.5,
+      159.5,
+      192.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      4.5,
+      5,
+      5,
+      7
+    ]
+  },
+  {
+    "week": 26,
+    "inventory": [
+      9,
+      9,
+      10,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      8,
+      7,
+      7
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      4.5,
+      4.5,
+      5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      148,
+      160,
+      164.5,
+      199
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      4.5,
+      4.5,
+      5,
+      6.5
+    ]
+  },
+  {
+    "week": 27,
+    "inventory": [
+      10,
+      8,
+      9,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      8,
+      8,
+      7
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      4,
+      4.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      153,
+      164,
+      169,
+      205.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      4,
+      4.5,
+      6.5
+    ]
+  },
+  {
+    "week": 28,
+    "inventory": [
+      10,
+      8,
+      8,
+      12
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      9,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      4,
+      4,
+      6
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      158,
+      168,
+      173,
+      211.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      4,
+      4,
+      6
+    ]
+  },
+  {
+    "week": 29,
+    "inventory": [
+      10,
+      8,
+      7,
+      12
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      9,
+      9,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      4,
+      3.5,
+      6
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      163,
+      172,
+      176.5,
+      217.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      4,
+      3.5,
+      6
+    ]
+  },
+  {
+    "week": 30,
+    "inventory": [
+      11,
+      9,
+      6,
+      11
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      9,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      4.5,
+      3,
+      5.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      168.5,
+      176.5,
+      179.5,
+      223
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      4.5,
+      3,
+      5.5
+    ]
+  },
+  {
+    "week": 31,
+    "inventory": [
+      12,
+      10,
+      6,
+      11
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      7,
+      8,
+      10,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      5,
+      3,
+      5.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      174.5,
+      181.5,
+      182.5,
+      228.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      5,
+      3,
+      5.5
+    ]
+  },
+  {
+    "week": 32,
+    "inventory": [
+      12,
+      12,
+      7,
+      10
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      8,
+      10,
+      10
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      6,
+      3.5,
+      5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      180.5,
+      187.5,
+      186,
+      233.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      6,
+      3.5,
+      5
+    ]
+  },
+  {
+    "week": 33,
+    "inventory": [
+      11,
+      12,
+      9,
+      10
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      8,
+      9,
+      10
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      6,
+      4.5,
+      5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      186,
+      193.5,
+      190.5,
+      238.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      6,
+      4.5,
+      5
+    ]
+  },
+  {
+    "week": 34,
+    "inventory": [
+      12,
+      12,
+      11,
+      11
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      8,
+      9,
+      10
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      6,
+      5.5,
+      5.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      192,
+      199.5,
+      196,
+      244
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      6,
+      5.5,
+      5.5
+    ]
+  },
+  {
+    "week": 35,
+    "inventory": [
+      12,
+      12,
+      12,
+      12
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      8,
+      8,
+      10
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      198,
+      205.5,
+      202,
+      250
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      6,
+      6,
+      6
+    ]
+  },
+  {
+    "week": 36,
+    "inventory": [
+      11,
+      12,
+      13,
+      14
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      8,
+      8,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      6,
+      6.5,
+      7
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      203.5,
+      211.5,
+      208.5,
+      257
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      6,
+      6.5,
+      7
+    ]
+  },
+  {
+    "week": 37,
+    "inventory": [
+      11,
+      12,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      6,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      209,
+      217.5,
+      215,
+      264.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      6,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 38,
+    "inventory": [
+      12,
+      12,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      6,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      215,
+      223.5,
+      221.5,
+      272
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      6,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 39,
+    "inventory": [
+      12,
+      12,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      6,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      221,
+      229.5,
+      228,
+      279.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      6,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 40,
+    "inventory": [
+      11,
+      12,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      6,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      226.5,
+      235.5,
+      234.5,
+      287
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      6,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 41,
+    "inventory": [
+      10,
+      12,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      8,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      6,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      231.5,
+      241.5,
+      241,
+      294.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      6,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 42,
+    "inventory": [
+      10,
+      11,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      8,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      5.5,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      236.5,
+      247,
+      247.5,
+      302
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      5.5,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 43,
+    "inventory": [
+      11,
+      10,
+      13,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      9,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      5,
+      6.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      242,
+      252,
+      254,
+      309.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      5,
+      6.5,
+      7.5
+    ]
+  },
+  {
+    "week": 44,
+    "inventory": [
+      10,
+      10,
+      12,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      9,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      5,
+      6,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      247,
+      257,
+      260,
+      317
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      5,
+      6,
+      7.5
+    ]
+  },
+  {
+    "week": 45,
+    "inventory": [
+      9,
+      10,
+      11,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      9,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      4.5,
+      5,
+      5.5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      251.5,
+      262,
+      265.5,
+      324.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      4.5,
+      5,
+      5.5,
+      7.5
+    ]
+  },
+  {
+    "week": 46,
+    "inventory": [
+      10,
+      10,
+      10,
+      15
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      9,
+      9,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      5,
+      5,
+      7.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      256.5,
+      267,
+      270.5,
+      332
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      5,
+      5,
+      7.5
+    ]
+  },
+  {
+    "week": 47,
+    "inventory": [
+      11,
+      10,
+      9,
+      14
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      9,
+      9,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      5,
+      4.5,
+      7
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      262,
+      272,
+      275,
+      339
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      5,
+      4.5,
+      7
+    ]
+  },
+  {
+    "week": 48,
+    "inventory": [
+      10,
+      10,
+      9,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      9,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      5,
+      4.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      267,
+      277,
+      279.5,
+      345.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      5,
+      4.5,
+      6.5
+    ]
+  },
+  {
+    "week": 49,
+    "inventory": [
+      13,
+      10,
+      9,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      9,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6.5,
+      5,
+      4.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      273.5,
+      282,
+      284,
+      352
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6.5,
+      5,
+      4.5,
+      6.5
+    ]
+  },
+  {
+    "week": 50,
+    "inventory": [
+      12,
+      11,
+      9,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      9,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      5.5,
+      4.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      279.5,
+      287.5,
+      288.5,
+      358.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      5.5,
+      4.5,
+      6.5
+    ]
+  },
+  {
+    "week": 51,
+    "inventory": [
+      11,
+      12,
+      9,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      8,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      6,
+      4.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      285,
+      293.5,
+      293,
+      365
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      6,
+      4.5,
+      6.5
+    ]
+  },
+  {
+    "week": 52,
+    "inventory": [
+      10,
+      12,
+      10,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      8,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      6,
+      5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      290,
+      299.5,
+      298,
+      371.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      6,
+      5,
+      6.5
+    ]
+  },
+  {
+    "week": 53,
+    "inventory": [
+      10,
+      11,
+      11,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      9,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      5.5,
+      5.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      295,
+      305,
+      303.5,
+      378
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      5.5,
+      5.5,
+      6.5
+    ]
+  },
+  {
+    "week": 54,
+    "inventory": [
+      10,
+      10,
+      11,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      9,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      5,
+      5.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      300,
+      310,
+      309,
+      384.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      5,
+      5.5,
+      6.5
+    ]
+  },
+  {
+    "week": 55,
+    "inventory": [
+      10,
+      10,
+      11,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      9,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      5,
+      5.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      305,
+      315,
+      314.5,
+      391
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      5,
+      5.5,
+      6.5
+    ]
+  },
+  {
+    "week": 56,
+    "inventory": [
+      9,
+      10,
+      11,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      10,
+      9,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      4.5,
+      5,
+      5.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      309.5,
+      320,
+      320,
+      397.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      4.5,
+      5,
+      5.5,
+      6.5
+    ]
+  },
+  {
+    "week": 57,
+    "inventory": [
+      9,
+      9,
+      11,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      10,
+      10,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      4.5,
+      4.5,
+      5.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      314,
+      324.5,
+      325.5,
+      404
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      4.5,
+      4.5,
+      5.5,
+      6.5
+    ]
+  },
+  {
+    "week": 58,
+    "inventory": [
+      10,
+      8,
+      10,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      10,
+      9,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      4,
+      5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      319,
+      328.5,
+      330.5,
+      410.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      4,
+      5,
+      6.5
+    ]
+  },
+  {
+    "week": 59,
+    "inventory": [
+      11,
+      9,
+      9,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      10,
+      10,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      4.5,
+      4.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      324.5,
+      333,
+      335,
+      417
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      4.5,
+      4.5,
+      6.5
+    ]
+  },
+  {
+    "week": 60,
+    "inventory": [
+      10,
+      10,
+      8,
+      12
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      10,
+      10,
+      10
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      5,
+      4,
+      6
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      329.5,
+      338,
+      339,
+      423
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      5,
+      4,
+      6
+    ]
+  },
+  {
+    "week": 61,
+    "inventory": [
+      11,
+      11,
+      8,
+      12
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      9,
+      10,
+      10
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5.5,
+      5.5,
+      4,
+      6
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      335,
+      343.5,
+      343,
+      429
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5.5,
+      5.5,
+      4,
+      6
+    ]
+  },
+  {
+    "week": 62,
+    "inventory": [
+      12,
+      12,
+      9,
+      12
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      9,
+      10,
+      10
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      6,
+      4.5,
+      6
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      341,
+      349.5,
+      347.5,
+      435
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      6,
+      4.5,
+      6
+    ]
+  },
+  {
+    "week": 63,
+    "inventory": [
+      12,
+      12,
+      10,
+      12
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      8,
+      9,
+      10,
+      10
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      6,
+      6,
+      5,
+      6
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      347,
+      355.5,
+      352.5,
+      441
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      6,
+      6,
+      5,
+      6
+    ]
+  },
+  {
+    "week": 64,
+    "inventory": [
+      10,
+      13,
+      11,
+      12
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      8,
+      9,
+      10
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      6.5,
+      5.5,
+      6
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      352,
+      362,
+      358,
+      447
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      6.5,
+      5.5,
+      6
+    ]
+  },
+  {
+    "week": 65,
+    "inventory": [
+      10,
+      13,
+      13,
+      13
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      8,
+      9,
+      10
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      6.5,
+      6.5,
+      6.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      357,
+      368.5,
+      364.5,
+      453.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      6.5,
+      6.5,
+      6.5
+    ]
+  },
+  {
+    "week": 66,
+    "inventory": [
+      10,
+      12,
+      14,
+      14
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      8,
+      8,
+      10
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      6,
+      7,
+      7
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      362,
+      374.5,
+      371.5,
+      460.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      6,
+      7,
+      7
+    ]
+  },
+  {
+    "week": 67,
+    "inventory": [
+      10,
+      11,
+      15,
+      16
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      9,
+      9,
+      8,
+      9
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      5,
+      5.5,
+      7.5,
+      8
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      367,
+      380,
+      379,
+      468.5
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      5,
+      5.5,
+      7.5,
+      8
+    ]
+  },
+  {
+    "week": 68,
+    "inventory": [
+      9,
+      10,
+      14,
+      17
+    ],
+    "backlog": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "orders": [
+      10,
+      9,
+      8,
+      8
+    ],
+    "incoming": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "operationalCost": [
+      4.5,
+      5,
+      7,
+      8.5
+    ],
+    "gas": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "systemGas": 0,
+    "cumulativeCost": [
+      371.5,
+      385,
+      386,
+      477
+    ],
+    "totalGasCost": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "totalCostWithGas": [
+      4.5,
+      5,
+      7,
+      8.5
+    ]
+  }
+]

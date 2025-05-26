@@ -1,0 +1,12 @@
+{
+  "DataSource": "two_order_two_shipping_delay_simulation",
+  "Periods": 69,
+  "TraditionalCost": 2345.5,
+  "BlockchainCost": 1245,
+  "PlayerGasCostUSD": 1181.4940499999993,
+  "SystemGasCostUSD": 9662.86855,
+  "TotalGasCostUSD": 10844.362599999999,
+  "BlockchainTotalWithGas": 12089.362599999999,
+  "CostReduction": 1100.5,
+  "CostReductionPercent": "46.92"
+}

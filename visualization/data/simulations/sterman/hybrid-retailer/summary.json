@@ -1,0 +1,12 @@
+{
+  "DataSource": "hybrid_retailer_simulation",
+  "Periods": 69,
+  "TraditionalCost": 1722,
+  "BlockchainCost": 1650.5,
+  "PlayerGasCostUSD": 893.0987499999997,
+  "SystemGasCostUSD": 9608.785,
+  "TotalGasCostUSD": 10501.883749999999,
+  "BlockchainTotalWithGas": 12152.383749999999,
+  "CostReduction": 71.5,
+  "CostReductionPercent": "4.15"
+}

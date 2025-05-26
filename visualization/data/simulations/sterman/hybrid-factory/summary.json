@@ -1,0 +1,12 @@
+{
+  "DataSource": "hybrid_factory_simulation",
+  "Periods": 69,
+  "TraditionalCost": 1706,
+  "BlockchainCost": 1717.5,
+  "PlayerGasCostUSD": 294.9782000000001,
+  "SystemGasCostUSD": 9553.628449999998,
+  "TotalGasCostUSD": 9848.606649999998,
+  "BlockchainTotalWithGas": 11566.106649999998,
+  "CostReduction": -11.5,
+  "CostReductionPercent": "-0.67"
+}

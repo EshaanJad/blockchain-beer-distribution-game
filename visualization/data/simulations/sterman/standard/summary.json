@@ -1,0 +1,12 @@
+{
+  "DataSource": "standard_simulation",
+  "Periods": 69,
+  "TraditionalCost": 1619.5,
+  "BlockchainCost": 1595,
+  "PlayerGasCostUSD": 1179.3940499999997,
+  "SystemGasCostUSD": 9515.418349999998,
+  "TotalGasCostUSD": 10694.812399999997,
+  "BlockchainTotalWithGas": 12289.812399999997,
+  "CostReduction": 24.5,
+  "CostReductionPercent": "1.51"
+}

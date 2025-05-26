@@ -52,3 +52,19 @@ typechain-types/
 
 # Hardhat Ignition default folder for deployments against a local node
 ignition/deployments/chain-31337
+
+# macOS specific files
+.DS_Store
+*.textClipping
+
+# Temporary and backup files
+tmp/
+backup/
+
+# Generated images
+*.png
+
+# Specific CSV files - consider a more general pattern if applicable
+Bullwhip_Metrics_2025-05-14.csv
+Bullwhip_Metrics_2025-05-13 copy.csv
+Gas_Costs_standard_2025-05-13.csv

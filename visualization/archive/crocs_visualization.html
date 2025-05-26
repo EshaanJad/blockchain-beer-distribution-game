@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crocs Supply Chain Simulation Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 1400px; /* Increased max-width for better layout */
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .chart-container {
+            margin-bottom: 60px; /* Increased from 40px */
+            width: 100%;
+            max-width: 1200px; /* Increased max-width for charts */
+            padding-bottom: 40px; /* Add padding at the bottom to prevent cropping */
+        }
+        .main-chart-item {
+            min-height: 600px; /* Increased from 500px */
+            position: relative; /* Add positioning context */
+        }
+        .main-charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 60px; /* Increased from 40px for better separation */
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
+            margin-bottom: 40px; /* Add bottom margin */
+        }
+        .line {
+            fill: none;
+            stroke-width: 2;
+        }
+        .grid line {
+            stroke: lightgrey;
+            stroke-opacity: 0.7;
+            shape-rendering: crispEdges;
+        }
+        .grid path {
+            stroke-width: 0;
+        }
+        .legend {
+            font-size: 12px;
+        }
+        h1, h2 {
+            text-align: center;
+            width: 100%;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 20px;
+            width: 100%;
+        }
+        select, button {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        
+        #refreshData {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        #refreshData:hover {
+            background-color: #45a049;
+        }
+        
+        .axis-label {
+            font-size: 12px;
+            text-anchor: middle;
+        }
+        svg {
+            display: block;
+            width: 100%;
+            height: auto;
+            overflow: visible; /* Allow content to overflow boundaries */
+        }
+        .tooltip {
+            position: absolute;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 4px;
+            pointer-events: none;
+            font-size: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 200px;
+        }
+        
+        .tooltip-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 3px;
+        }
+        
+        .tooltip-value {
+            margin-top: 3px;
+        }
+        
+        .tooltip-phase {
+            font-style: italic;
+            color: #aaa;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 3px;
+            margin-right: 5px;
+        }
+        
+        .legend-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: #f9f9f9;
+            border-radius: 3px;
+        }
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .metrics-table th, .metrics-table td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: center;
+        }
+        
+        .metrics-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        .metrics-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .positive-change {
+            color: green;
+        }
+        
+        .negative-change {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Crocs Supply Chain Simulation Visualization</h1>
+
+    <div class="controls">
+        <select id="roleSelect">
+            <option value="all">All Roles</option>
+            <option value="retailer">Retailer</option>
+            <option value="wholesaler">Wholesaler</option>
+            <option value="distributor">Distributor</option>
+            <option value="factory">Factory</option>
+        </select>
+        <select id="periodSelect">
+            <option value="23">23 Periods</option>
+            <option value="10">10 Periods</option>
+        </select>
+        <button id="refreshData">Refresh Data</button>
+    </div>
+
+    <!-- Loading indicator -->
+    <div id="loadingIndicator" style="text-align: center; padding: 20px;">
+        <p>Loading simulation data... Please wait.</p>
+    </div>
+
+    <!-- Error message container -->
+    <div id="errorContainer" style="display: none; color: red; text-align: center; padding: 20px; border: 1px solid #ffcccc; margin: 20px; background-color: #fff5f5;">
+        <h3>Error Loading Data</h3>
+        <p id="errorMessage">Unable to load simulation data. Please check if the JSON files exist in the correct location.</p>
+    </div>
+
+    <div id="visualization-content" style="display: none;">
+        <div id="dataInfo" style="text-align: center; margin-bottom: 10px; font-size: 12px; color: #666;">
+            <span id="lastUpdated"></span>
+        </div>
+        <div id="costComparison" class="chart-container">
+            <h2>Total Supply Chain Cost Comparison</h2>
+            <div id="costChart"></div>
+        </div>
+
+        <!-- Cost Breakdown Section -->
+        <div id="costBreakdown" class="chart-container">
+            <h2>Cost Breakdown Comparison</h2>
+            <div id="costBreakdownChart">
+                <table id="costBreakdownTable" class="metrics-table">
+                    <thead>
+                        <tr>
+                            <th>Cost Type</th>
+                            <th>Traditional</th>
+                            <th>Blockchain</th>
+                            <th>Difference</th>
+                            <th>% Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="totalCostRow">
+                            <td>Total Cost</td>
+                            <td id="tradTotalCost">-</td>
+                            <td id="blockTotalCost">-</td>
+                            <td id="totalCostDiff">-</td>
+                            <td id="totalCostPct">-</td>
+                        </tr>
+                        <tr id="holdingCostRow">
+                            <td>Holding Cost</td>
+                            <td id="tradHoldingCost">-</td>
+                            <td id="blockHoldingCost">-</td>
+                            <td id="holdingCostDiff">-</td>
+                            <td id="holdingCostPct">-</td>
+                        </tr>
+                        <tr id="backlogCostRow">
+                            <td>Backlog Cost</td>
+                            <td id="tradBacklogCost">-</td>
+                            <td id="blockBacklogCost">-</td>
+                            <td id="backlogCostDiff">-</td>
+                            <td id="backlogCostPct">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Grid container for the four main charts -->
+        <div class="main-charts-grid">
+            <div id="ordersVisualization" class="chart-container main-chart-item">
+                <h2 id="ordersChartTitle">Order Quantities Over Time</h2>
+                <div id="ordersChart"></div>
+            </div>
+            <div id="inventoryVisualization" class="chart-container main-chart-item">
+                <h2 id="inventoryChartTitle">Inventory Levels Over Time</h2>
+                <div id="inventoryChart"></div>
+            </div>
+            <div id="backlogVisualization" class="chart-container main-chart-item">
+                <h2 id="backlogChartTitle">Backlog Quantities Over Time</h2>
+                <div id="backlogChart"></div>
+            </div>
+            <div id="costsVisualization" class="chart-container main-chart-item">
+                <h2 id="costsChartTitle">Weekly Costs Over Time</h2>
+                <div id="costsChart"></div>
+            </div>
+            <div id="holdingCostsVisualization" class="chart-container main-chart-item">
+                <h2 id="holdingCostsChartTitle">Holding Costs Over Time</h2>
+                <div id="holdingCostsChart"></div>
+            </div>
+            <div id="backlogCostsVisualization" class="chart-container main-chart-item">
+                <h2 id="backlogCostsChartTitle">Backlog Costs Over Time</h2>
+                <div id="backlogCostsChart"></div>
+            </div>
+        </div>
+        
+        <!-- Summary metrics section -->
+        <div id="summaryMetrics" class="chart-container">
+            <h2>Summary Statistics and Analysis</h2>
+            <div class="summary-container" style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 30px;">
+                <div class="cost-summary" style="text-align: center; margin-bottom: 20px;">
+                    <h3>Cost Comparison</h3>
+                    <div id="costSummary" style="display: flex; justify-content: space-around; margin-top: 10px;">
+                        <div class="summary-item">
+                            <strong>Traditional Total Cost:</strong> <span id="traditionalCost">...</span>
+                        </div>
+                        <div class="summary-item">
+                            <strong>Blockchain Total Cost:</strong> <span id="blockchainCost">...</span>
+                        </div>
+                        <div class="summary-item">
+                            <strong>Cost Reduction:</strong> <span id="costReduction">...</span> (<span id="costReductionPercent">...</span>%)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bullwhip-summary" style="margin-bottom: 20px;">
+                    <h3>Bullwhip Effect Analysis</h3>
+                    <p>The bullwhip effect measures the amplification of order variability as we move upstream in the supply chain. A lower value indicates better coordination.</p>
+                    <table id="bullwhipTable" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Role</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Traditional</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Blockchain</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Difference</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">% Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows will be filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="inventory-backlog-summary">
+                    <h3>Inventory and Backlog Analysis</h3>
+                    <p>This table shows the average inventory and backlog levels for each role throughout the simulation.</p>
+                    <table id="invBacklogTable" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Metric</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Traditional</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Blockchain</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Difference</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">% Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows will be filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let blockchainData, traditionalData;
+        let selectedPeriods = 23; // Default to 23 periods
+        
+        // Function to load data based on selected periods
+        function loadData() {
+            // Show loading indicator
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('visualization-content').style.display = 'none';
+            document.getElementById('errorContainer').style.display = 'none';
+            
+            // Get the selected periods
+            selectedPeriods = document.getElementById('periodSelect').value;
+            
+            // Load JSON data files
+            Promise.all([
+                d3.json(`./data_blockchain_crocs_${selectedPeriods}_periods.json?v=${new Date().getTime()}`),
+                d3.json(`./data_traditional_crocs_${selectedPeriods}_periods.json?v=${new Date().getTime()}`)
+            ]).then(function(data) {
+                blockchainData = data[0];
+                traditionalData = data[1];
+                
+                console.log(`Successfully loaded ${selectedPeriods} period data:`, new Date());
+                
+                // Update last loaded timestamp
+                updateDataTimestamp();
+                
+                // Hide loading indicator, show content
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('visualization-content').style.display = 'block';
+                
+                // Draw all charts again
+                drawAllCharts();
+            }).catch(function(error) {
+                console.error('Error loading data:', error);
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('errorContainer').style.display = 'block';
+                document.getElementById('errorMessage').textContent = 
+                    'Error loading data: ' + error.message;
+            });
+        }
+        
+        // Initial load
+        loadData();
+        
+        // Set up event listener for period select
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up role selector
+            d3.select('#roleSelect').on('change', drawAllCharts);
+            
+            // Set up period selector
+            d3.select('#periodSelect').on('change', loadData);
+            
+            // Setup refresh button
+            d3.select('#refreshData').on('click', loadData);
+        });
+
+        function drawAllCharts() {
+            drawCostComparison();
+            drawMainChart('orders', 'ordersChart');
+            drawMainChart('inventory', 'inventoryChart');
+            drawMainChart('backlog', 'backlogChart');
+            drawMainChart('costs', 'costsChart');
+            drawMainChart('holdingCosts', 'holdingCostsChart');
+            drawMainChart('backlogCosts', 'backlogCostsChart');
+            updateTitles();
+            updateSummaryMetrics();
+        }
+
+        // Update the timestamp display
+        function updateDataTimestamp() {
+            const now = new Date();
+            const formattedTime = now.toLocaleTimeString() + ' on ' + now.toLocaleDateString();
+            document.getElementById('lastUpdated').textContent = 'Data last loaded: ' + formattedTime;
+        }
+
+        // Get the current role filter
+        function getCurrentRoleFilter() {
+            return d3.select('#roleSelect').property('value');
+        }
+
+        // Get chart title based on chart type
+        function getChartTitle(chartType) {
+            const roleFilter = getCurrentRoleFilter();
+            const roleSuffix = roleFilter !== 'all' ? ` (${capitalizeFirstLetter(roleFilter)})` : '';
+            
+            switch(chartType) {
+                case 'orders': 
+                    return (roleFilter === 'factory') ? 
+                        `Production Quantities Over Time${roleSuffix}` : 
+                        `Order Quantities Over Time${roleSuffix}`;
+                case 'inventory': return `Inventory Levels Over Time${roleSuffix}`;
+                case 'backlog': return `Backlog Quantities Over Time${roleSuffix}`;
+                case 'costs': return `Weekly Costs Over Time${roleSuffix}`;
+                case 'holdingCosts': return `Holding Costs Over Time${roleSuffix}`;
+                case 'backlogCosts': return `Backlog Costs Over Time${roleSuffix}`;
+                default: return `Data Over Time${roleSuffix}`;
+            }
+        }
+
+        function updateTitles() {
+            document.getElementById('ordersChartTitle').textContent = 'Order Quantities Over Time';
+            document.getElementById('inventoryChartTitle').textContent = 'Inventory Levels Over Time';
+            document.getElementById('backlogChartTitle').textContent = 'Backlog Quantities Over Time';
+            document.getElementById('costsChartTitle').textContent = 'Weekly Costs Over Time';
+            document.getElementById('holdingCostsChartTitle').textContent = 'Holding Costs Over Time';
+            document.getElementById('backlogCostsChartTitle').textContent = 'Backlog Costs Over Time';
+            
+            const roleFilter = d3.select('#roleSelect').property('value');
+            const ordersTitle = document.getElementById('ordersChartTitle');
+            if (roleFilter === 'factory') {
+                ordersTitle.textContent = 'Production Quantities Over Time';
+            } else {
+                ordersTitle.textContent = 'Order Quantities Over Time';
+            }
+        }
+
+        function drawCostComparison() {
+            // Check if we have both datasets
+            if (!blockchainData || !traditionalData) {
+                d3.select('#costChart').text("Cost comparison requires both traditional and blockchain data.");
+                return;
+            }
+
+            // Clear previous chart
+            d3.select('#costChart').html("");
+
+            // Chart dimensions
+            const margin = { top: 50, right: 150, bottom: 80, left: 80 };
+            const width = 800 - margin.left - margin.right;
+            const height = 550 - margin.top - margin.bottom;
+
+            const svg = d3.select('#costChart')
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .style('overflow', 'visible')
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+
+            // Calculate cumulative costs for both datasets
+            const blockchainCumulativeCosts = calculateCumulative(blockchainData);
+            const traditionalCumulativeCosts = calculateCumulative(traditionalData);
+
+            if (blockchainCumulativeCosts.length === 0 || traditionalCumulativeCosts.length === 0) {
+                console.error("Cost Comparison: Failed to extract cost data.");
+                d3.select('#costChart').text("Error processing cost data.");
+                return;
+            }
+
+            // Scales
+            const x = d3.scaleLinear()
+                .domain([0, Math.max(blockchainCumulativeCosts.length - 1, traditionalCumulativeCosts.length - 1)])
+                .range([0, width]);
+
+            const maxCost = Math.max(
+                d3.max(blockchainCumulativeCosts, d => d.value) || 0,
+                d3.max(traditionalCumulativeCosts, d => d.value) || 0
+            );
+            const y = d3.scaleLinear()
+                .domain([0, maxCost * 1.15])
+                .range([height, 0]);
+
+            // Add title
+            svg.append('text')
+                .attr('class', 'chart-title')
+                .attr('x', width / 2)
+                .attr('y', -20)
+                .text('Cumulative Supply Chain Cost Comparison');
+
+            // Axes
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x).ticks(Math.min(blockchainCumulativeCosts.length, 10)));
+
+            svg.append('g')
+                .call(d3.axisLeft(y));
+
+            // Line generator
+            const line = d3.line()
+                .x(d => x(d.week))
+                .y(d => y(d.value));
+
+            // Add blockchain line
+            svg.append('path')
+                .datum(blockchainCumulativeCosts)
+                .attr('class', 'line')
+                .attr('d', line)
+                .style('stroke', 'steelblue')
+                .style('fill', 'none')
+                .style('stroke-width', 2);
+
+            // Add traditional line
+            svg.append('path')
+                .datum(traditionalCumulativeCosts)
+                .attr('class', 'line')
+                .attr('d', line)
+                .style('stroke', 'red')
+                .style('fill', 'none')
+                .style('stroke-width', 2);
+
+            // Legend
+            const legend = svg.append('g')
+                .attr('class', 'legend')
+                .attr('transform', `translate(${width + 20}, 20)`);
+
+            legend.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 20).attr('y2', 0).style('stroke', 'steelblue').style('stroke-width', 2);
+            legend.append('text').attr('x', 25).attr('y', 5).text('Blockchain');
+
+            legend.append('line').attr('x1', 0).attr('y1', 25).attr('x2', 20).attr('y2', 25).style('stroke', 'red').style('stroke-width', 2);
+            legend.append('text').attr('x', 25).attr('y', 30).text('Traditional');
+
+            // Final costs
+            const finalBlockchainCost = blockchainCumulativeCosts.length > 0 ? blockchainCumulativeCosts[blockchainCumulativeCosts.length - 1].value : 0;
+            const finalTraditionalCost = traditionalCumulativeCosts.length > 0 ? traditionalCumulativeCosts[traditionalCumulativeCosts.length - 1].value : 0;
+            const costReduction = finalTraditionalCost - finalBlockchainCost;
+            const costReductionPercent = finalTraditionalCost > 0 ? (costReduction / finalTraditionalCost * 100) : 0;
+
+            const summaryText = svg.append('g')
+                .attr('transform', `translate(${width / 2}, ${height + 50})`);
+
+            summaryText.append('text')
+                .attr('text-anchor', 'middle')
+                .text(`Cost reduction with blockchain: ${costReduction.toFixed(2)} (${costReductionPercent.toFixed(2)}%)`);
+
+            // Add axis labels
+            svg.append('text').attr('class', 'axis-label').attr('x', width / 2).attr('y', height + 40).text('Week');
+            svg.append('text').attr('class', 'axis-label').attr('transform', 'rotate(-90)').attr('x', -height / 2).attr('y', -60).text('Total Supply Chain Cost');
+        }
+
+        function calculateCumulative(data) {
+            if (!data || !data.retailer) return [];
+            
+            const roles = ['retailer', 'wholesaler', 'distributor', 'factory'];
+            const weeks = data.retailer.length;
+            const cumulativeCosts = [];
+            
+            let cumulativeCost = 0;
+            
+            for (let weekIndex = 0; weekIndex < weeks; weekIndex++) {
+                let weekTotalCost = 0;
+                
+                // Sum the costs for all roles in this week
+                for (const role of roles) {
+                    if (data[role] && data[role][weekIndex] && data[role][weekIndex].weeklyCost !== undefined) {
+                        weekTotalCost += data[role][weekIndex].weeklyCost;
+                    }
+                }
+                
+                // Add to cumulative total
+                cumulativeCost += weekTotalCost;
+                
+                cumulativeCosts.push({
+                    week: weekIndex,
+                    value: cumulativeCost
+                });
+            }
+            
+            return cumulativeCosts;
+        }
+
+        function drawMainChart(chartType, targetDiv) {
+            // Remove the '#' from the beginning of the selector if it exists
+            const targetSelector = targetDiv.startsWith('#') ? targetDiv : '#' + targetDiv;
+            const chartContainer = document.querySelector(targetSelector);
+            
+            if (!chartContainer) {
+                console.error(`Chart container not found for selector: ${targetSelector}`);
+                return;
+            }
+            
+            chartContainer.innerHTML = '';
+
+            const chartTitle = getChartTitle(chartType);
+            const seriesData = generateSeriesData(chartType, getCurrentRoleFilter());
+
+            if (seriesData.length === 0) {
+                chartContainer.innerHTML = `<div class="no-data">No data available for ${chartTitle}</div>`;
+                return;
+            }
+
+            // Find min and max for the axis
+            let yMin = Infinity;
+            let yMax = -Infinity;
+            let xMax = 0;
+
+            seriesData.forEach(series => {
+                series.values.forEach(d => {
+                    if (d.value !== null && d.value !== undefined) {
+                        yMin = Math.min(yMin, d.value);
+                        yMax = Math.max(yMax, d.value);
+                        xMax = Math.max(xMax, d.week);
+                    }
+                });
+            });
+
+            // Ensure we have reasonable values if there's no data
+            if (yMin === Infinity) yMin = 0;
+            if (yMax === -Infinity) yMax = 100;
+            
+            // Add some padding to the y-axis, especially at the bottom
+            const yRange = yMax - yMin;
+            yMin = Math.max(0, yMin - yRange * 0.15); // Increased padding from 0.1 to 0.15
+            yMax = yMax + yRange * 0.15; // Increased padding from 0.1 to 0.15
+
+            // Set up dimensions
+            const margin = { top: 40, right: 150, bottom: 60, left: 80 };
+            const width = Math.max(800, chartContainer.offsetWidth) - margin.left - margin.right;
+            const height = 500 - margin.top - margin.bottom;
+
+            // Create SVG
+            const svg = d3.select(`#${targetDiv}`)
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .style('overflow', 'visible')
+                .append('g')
+                .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+            // Add title
+            svg.append('text')
+                .attr('x', width / 2)
+                .attr('y', -margin.top / 2)
+                .attr('text-anchor', 'middle')
+                .style('font-size', '16px')
+                .style('font-weight', 'bold')
+                .text(chartTitle);
+
+            // Define scales
+            const x = d3.scaleLinear()
+                .domain([0, xMax])
+                .range([0, width]);
+
+            const y = d3.scaleLinear()
+                .domain([yMin, yMax])
+                .range([height, 0]);
+
+            // Add axes
+            svg.append('g')
+                .attr('transform', `translate(0, ${height})`)
+                .call(d3.axisBottom(x).ticks(Math.min(xMax, 10)));
+
+            svg.append('g')
+                .call(d3.axisLeft(y));
+
+            // Add axis labels
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', -margin.left + 20)
+                .attr('x', -height / 2)
+                .attr('text-anchor', 'middle')
+                .style('font-size', '14px')
+                .text(getYAxisLabel(chartType));
+
+            svg.append('text')
+                .attr('x', width / 2)
+                .attr('y', height + margin.bottom - 10)
+                .attr('text-anchor', 'middle')
+                .style('font-size', '14px')
+                .text('Week');
+
+            // Create tooltip div
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0)
+                .style("position", "absolute")
+                .style("background-color", "white")
+                .style("border", "1px solid #ddd")
+                .style("border-radius", "5px")
+                .style("padding", "10px")
+                .style("pointer-events", "none");
+
+            // Color scale
+            const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+            // Lines
+            seriesData.forEach((series, i) => {
+                if (series.values && series.values.length > 0) {
+                    // Sort values by week to ensure proper line drawing
+                    series.values.sort((a, b) => a.week - b.week);
+                    
+                    // Create a line generator for valid data points
+                    const line = d3.line()
+                        .defined(d => d.value !== null && d.value !== undefined)
+                        .x(d => x(d.week))
+                        .y(d => y(d.value))
+                        .curve(d3.curveLinear);
+                        
+                    // Filter out the undefined values to create segments
+                    const validData = series.values.filter(d => d.value !== null && d.value !== undefined);
+                    
+                    // Draw the line segments where data is available
+                    // This ensures discontinuities in the data show as actual gaps
+                    const path = svg.append('path')
+                        .datum(validData)
+                        .attr('class', 'line')
+                        .attr('d', line)
+                        .style('stroke', series.color || color(i))
+                        .style('fill', 'none')
+                        .style('stroke-width', 2);
+                        
+                    // Apply dash pattern if specified
+                    if (series.dashPattern) {
+                        path.style('stroke-dasharray', series.dashPattern);
+                    }
+                    
+                    // Remove data points (circles) as requested
+                }
+            });
+
+            // Legend
+            const legend = svg.append('g')
+                .attr('class', 'legend')
+                .attr('transform', `translate(${width + 20}, 0)`);
+
+            seriesData.forEach((series, i) => {
+                const legendRow = legend.append('g')
+                    .attr('transform', `translate(0, ${i * 20})`);
+                    
+                legendRow.append('line')
+                    .attr('x1', 0)
+                    .attr('y1', 10)
+                    .attr('x2', 20)
+                    .attr('y2', 10)
+                    .style('stroke', series.color || color(i))
+                    .style('stroke-width', 2);
+                    
+                // Apply dash pattern to legend line if specified
+                if (series.dashPattern) {
+                    legendRow.select('line')
+                        .style('stroke-dasharray', series.dashPattern);
+                }
+                    
+                legendRow.append('text')
+                    .attr('x', 30)
+                    .attr('y', 10)
+                    .attr('dy', '.35em')
+                    .style('font-size', '12px')
+                    .text(series.name);
+            });
+        }
+
+        function generateSeriesData(chartType, roleFilter = null) {
+            const series = [];
+            
+            // Debug logging to understand data structure
+            console.log("Blockchain Data Structure:", blockchainData);
+            console.log("Traditional Data Structure:", traditionalData);
+            
+            if (chartType === 'inventory') {
+                const roles = ['retailer', 'wholesaler', 'distributor', 'factory'];
+                
+                roles.forEach(role => {
+                    if (roleFilter && roleFilter !== 'all' && role !== roleFilter) return;
+                    
+                    // Traditional data series for inventory
+                    if (traditionalData && traditionalData[role]) {
+                        const values = traditionalData[role]
+                            .map((weekData, weekIndex) => {
+                                // Use inventoryEnd field for the final inventory value
+                                const value = weekData?.inventoryEnd;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Traditional ${capitalizeFirstLetter(role)}`,
+                            color: '#FF5555', // Red for traditional
+                            values: values
+                        });
+                    }
+                    
+                    // Blockchain data series for inventory
+                    if (blockchainData && blockchainData[role]) {
+                        const values = blockchainData[role]
+                            .map((weekData, weekIndex) => {
+                                // Use inventoryEnd field for the final inventory value
+                                const value = weekData?.inventoryEnd;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Blockchain ${capitalizeFirstLetter(role)}`,
+                            values: values
+                        });
+                    }
+                });
+            } else if (chartType === 'orders') {
+                const roles = ['retailer', 'wholesaler', 'distributor', 'factory'];
+                
+                roles.forEach(role => {
+                    if (roleFilter && roleFilter !== 'all' && role !== roleFilter) return;
+                    
+                    // Traditional data series for orders
+                    if (traditionalData && traditionalData[role]) {
+                        const values = traditionalData[role]
+                            .map((weekData, weekIndex) => {
+                                // Access order data 
+                                const value = weekData?.order;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Traditional ${capitalizeFirstLetter(role)}`,
+                            color: '#FF5555', // Red for traditional
+                            values: values
+                        });
+                    }
+                    
+                    // Blockchain data series for orders
+                    if (blockchainData && blockchainData[role]) {
+                        const values = blockchainData[role]
+                            .map((weekData, weekIndex) => {
+                                // Access order data
+                                const value = weekData?.order;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Blockchain ${capitalizeFirstLetter(role)}`,
+                            values: values
+                        });
+                    }
+                });
+            } else if (chartType === 'backlog') {
+                const roles = ['retailer', 'wholesaler', 'distributor', 'factory'];
+                
+                roles.forEach(role => {
+                    if (roleFilter && roleFilter !== 'all' && role !== roleFilter) return;
+                    
+                    // Traditional data series for backlog
+                    if (traditionalData && traditionalData[role]) {
+                        const values = traditionalData[role]
+                            .map((weekData, weekIndex) => {
+                                // Access backlog data (use backlogEnd for final state)
+                                const value = weekData?.backlogEnd;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Traditional ${capitalizeFirstLetter(role)}`,
+                            color: '#FF5555', // Red for traditional
+                            values: values
+                        });
+                    }
+                    
+                    // Blockchain data series for backlog
+                    if (blockchainData && blockchainData[role]) {
+                        const values = blockchainData[role]
+                            .map((weekData, weekIndex) => {
+                                // Access backlog data (use backlogEnd for final state)
+                                const value = weekData?.backlogEnd;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Blockchain ${capitalizeFirstLetter(role)}`,
+                            values: values
+                        });
+                    }
+                });
+            } else if (chartType === 'costs') {
+                const roles = ['retailer', 'wholesaler', 'distributor', 'factory'];
+                
+                roles.forEach(role => {
+                    if (roleFilter && roleFilter !== 'all' && role !== roleFilter) return;
+                    
+                    // Traditional data series for costs
+                    if (traditionalData && traditionalData[role]) {
+                        const values = traditionalData[role]
+                            .map((weekData, weekIndex) => {
+                                // Access weekly cost data
+                                const value = weekData?.weeklyCost;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Traditional ${capitalizeFirstLetter(role)}`,
+                            color: '#FF5555', // Red for traditional
+                            values: values
+                        });
+                    }
+                    
+                    // Blockchain data series for costs
+                    if (blockchainData && blockchainData[role]) {
+                        const values = blockchainData[role]
+                            .map((weekData, weekIndex) => {
+                                // Access weekly cost data
+                                const value = weekData?.weeklyCost;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Blockchain ${capitalizeFirstLetter(role)}`,
+                            values: values
+                        });
+                    }
+                });
+            } else if (chartType === 'holdingCosts') {
+                const roles = ['retailer', 'wholesaler', 'distributor', 'factory'];
+                
+                roles.forEach(role => {
+                    if (roleFilter && roleFilter !== 'all' && role !== roleFilter) return;
+                    
+                    // Traditional data series for holding costs
+                    if (traditionalData && traditionalData[role]) {
+                        const values = traditionalData[role]
+                            .map((weekData, weekIndex) => {
+                                // Access holding cost data
+                                const value = weekData?.holdingCost;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Traditional ${capitalizeFirstLetter(role)}`,
+                            color: '#FF5555', // Red for traditional
+                            values: values
+                        });
+                    }
+                    
+                    // Blockchain data series for holding costs
+                    if (blockchainData && blockchainData[role]) {
+                        const values = blockchainData[role]
+                            .map((weekData, weekIndex) => {
+                                // Access holding cost data
+                                const value = weekData?.holdingCost;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Blockchain ${capitalizeFirstLetter(role)}`,
+                            values: values
+                        });
+                    }
+                });
+            } else if (chartType === 'backlogCosts') {
+                const roles = ['retailer', 'wholesaler', 'distributor', 'factory'];
+                
+                roles.forEach(role => {
+                    if (roleFilter && roleFilter !== 'all' && role !== roleFilter) return;
+                    
+                    // Traditional data series for backlog costs
+                    if (traditionalData && traditionalData[role]) {
+                        const values = traditionalData[role]
+                            .map((weekData, weekIndex) => {
+                                // Access backlog cost data
+                                const value = weekData?.backlogCost;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Traditional ${capitalizeFirstLetter(role)}`,
+                            color: '#FF5555', // Red for traditional
+                            values: values
+                        });
+                    }
+                    
+                    // Blockchain data series for backlog costs
+                    if (blockchainData && blockchainData[role]) {
+                        const values = blockchainData[role]
+                            .map((weekData, weekIndex) => {
+                                // Access backlog cost data
+                                const value = weekData?.backlogCost;
+                                // Return all points, preserving null values to show discontinuities
+                                return { week: weekIndex, value: value };
+                            });
+                        
+                        series.push({
+                            name: `Blockchain ${capitalizeFirstLetter(role)}`,
+                            values: values
+                        });
+                    }
+                });
+            }
+            
+            return series;
+        }
+
+        function getYAxisLabel(chartType) {
+            const roleFilter = d3.select('#roleSelect').property('value');
+            switch(chartType) {
+                case 'orders': return (roleFilter === 'factory') ? 'Production Quantity' : 'Order Quantity';
+                case 'inventory': return 'Inventory Level';
+                case 'backlog': return 'Backlog Quantity';
+                case 'costs': return 'Weekly Cost';
+                case 'holdingCosts': return 'Holding Cost';
+                case 'backlogCosts': return 'Backlog Cost';
+                default: return 'Value';
+            }
+        }
+
+        function capitalizeFirstLetter(string) {
+            if (!string) return '';
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // New function to calculate and display summary metrics
+        function updateSummaryMetrics() {
+            if (!blockchainData || !traditionalData) {
+                console.error("Cannot update summary metrics: data not loaded");
+                return;
+            }
+            
+            // Calculate total costs
+            let tradTotal = 0;
+            let blockTotal = 0;
+            let tradHolding = 0;
+            let blockHolding = 0;
+            let tradBacklog = 0;
+            let blockBacklog = 0;
+            
+            const roles = ['retailer', 'wholesaler', 'distributor', 'factory'];
+            
+            roles.forEach(role => {
+                if (traditionalData[role]) {
+                    traditionalData[role].forEach(week => {
+                        if (week.weeklyCost !== undefined) tradTotal += week.weeklyCost;
+                        if (week.holdingCost !== undefined) tradHolding += week.holdingCost;
+                        if (week.backlogCost !== undefined) tradBacklog += week.backlogCost;
+                    });
+                }
+                
+                if (blockchainData[role]) {
+                    blockchainData[role].forEach(week => {
+                        if (week.weeklyCost !== undefined) blockTotal += week.weeklyCost;
+                        if (week.holdingCost !== undefined) blockHolding += week.holdingCost;
+                        if (week.backlogCost !== undefined) blockBacklog += week.backlogCost;
+                    });
+                }
+            });
+            
+            // Calculate differences and percentages
+            const totalDiff = blockTotal - tradTotal;
+            const totalPct = tradTotal !== 0 ? (totalDiff / tradTotal * 100) : 0;
+            
+            const holdingDiff = blockHolding - tradHolding;
+            const holdingPct = tradHolding !== 0 ? (holdingDiff / tradHolding * 100) : 0;
+            
+            const backlogDiff = blockBacklog - tradBacklog;
+            const backlogPct = tradBacklog !== 0 ? (backlogDiff / tradBacklog * 100) : 0;
+            
+            // Update total cost row
+            document.getElementById('tradTotalCost').textContent = tradTotal.toFixed(0);
+            document.getElementById('blockTotalCost').textContent = blockTotal.toFixed(0);
+            document.getElementById('totalCostDiff').textContent = totalDiff.toFixed(0);
+            document.getElementById('totalCostPct').textContent = totalPct.toFixed(2) + '%';
+            document.getElementById('totalCostPct').className = totalPct < 0 ? 'positive-change' : 'negative-change';
+            
+            // Update holding cost row
+            document.getElementById('tradHoldingCost').textContent = tradHolding.toFixed(0);
+            document.getElementById('blockHoldingCost').textContent = blockHolding.toFixed(0);
+            document.getElementById('holdingCostDiff').textContent = holdingDiff.toFixed(0);
+            document.getElementById('holdingCostPct').textContent = holdingPct.toFixed(2) + '%';
+            document.getElementById('holdingCostPct').className = holdingPct < 0 ? 'positive-change' : 'negative-change';
+            
+            // Update backlog cost row
+            document.getElementById('tradBacklogCost').textContent = tradBacklog.toFixed(0);
+            document.getElementById('blockBacklogCost').textContent = blockBacklog.toFixed(0);
+            document.getElementById('backlogCostDiff').textContent = backlogDiff.toFixed(0);
+            document.getElementById('backlogCostPct').textContent = backlogPct.toFixed(2) + '%';
+            document.getElementById('backlogCostPct').className = backlogPct < 0 ? 'positive-change' : 'negative-change';
+        }
+    </script>
+</body>
+</html> 

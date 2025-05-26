@@ -1,0 +1,2966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sterman Model Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Add SheetJS library for Excel export -->
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .visualization-section {
+            margin-bottom: 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .chart-container {
+            margin-top: 20px;
+            height: 400px;
+            width: 100%;
+        }
+        .scenario-select {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .comparison-table th {
+            background-color: #f2f2f2;
+        }
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            margin-right: 15px;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .bullwhip-indicator {
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .amplification {
+            background-color: #ffcccc;
+            color: #990000;
+        }
+        .no-effect {
+            background-color: #e6ffe6;
+            color: #006600;
+        }
+        .dampening {
+            background-color: #ccffff;
+            color: #006666;
+        }
+        
+        /* Styles for statistical metrics */
+        .statistics-section {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+        
+        .tab-container {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .tab-button {
+            margin: 5px;
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #ffffff;
+        }
+        
+        .tab-button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .tab-button.active {
+            background-color: #f2f2f2;
+            border-color: #999;
+        }
+        
+        .metrics-tab {
+            overflow-x: auto;
+        }
+        
+        .metrics-table {
+            min-width: 1100px;
+        }
+        
+        @media (max-width: 1200px) {
+            .metrics-table {
+                font-size: 0.85em;
+            }
+        }
+        
+        /* Export button styles */
+        .export-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+        
+        .export-button:hover {
+            background-color: #45a049;
+        }
+        
+        .export-button:active {
+            background-color: #3e8e41;
+        }
+        
+        .button-group {
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Add styles for the "Export All Data" button */
+        .export-all-button {
+            background-color: #2196F3;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .export-all-button:hover {
+            background-color: #0b7dda;
+        }
+        
+        .export-all-button:active {
+            background-color: #0a6fc2;
+        }
+        
+        /* CSS FOR LOADING INDICATOR */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Add to CSS styles section */
+        .extract-data-button {
+            background-color: #673AB7;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .extract-data-button:hover {
+            background-color: #5E35B1;
+        }
+        
+        .extract-data-button:active {
+            background-color: #512DA8;
+        }
+        
+        .metrics-table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        
+        .metrics-table th, .metrics-table td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            text-align: right;
+        }
+        
+        .metrics-table th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        
+        .metrics-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .metrics-table tr:hover {
+            background-color: #eef;
+        }
+        
+        .metrics-table th:first-child, 
+        .metrics-table th:nth-child(2), 
+        .metrics-table th:nth-child(3),
+        .metrics-table td:first-child,
+        .metrics-table td:nth-child(2),
+        .metrics-table td:nth-child(3) {
+            position: sticky;
+            left: 0;
+            background-color: #f2f2f2;
+            text-align: left;
+            z-index: 1;
+        }
+        
+        .metrics-table td:nth-child(3) {
+            border-right: 2px solid #999;
+        }
+        
+        .metrics-table th:nth-child(3) {
+            border-right: 2px solid #999;
+        }
+        
+        .download-csv-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .download-csv-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="visualization.html">Original Visualization</a>
+            <a href="costs-comparison.html">Costs Comparison</a>
+        </div>
+        
+        <h1>Sterman Model Simulation Results</h1>
+        
+        <div class="visualization-section">
+            <h2>Select Simulation Type</h2>
+            <select id="simulationTypeSelect" class="scenario-select">
+                <option value="standard">Standard Sterman Model</option>
+                <option value="two-order-delay">Two-Order Delay Model</option>
+                <option value="two-shipping-delay">Two-Shipping Delay Model</option>
+                <option value="zero-delay">Zero Delay Model</option>
+                <option value="zero-order-two-shipping-delay">Zero Order Two Shipping Delay Model</option>
+                <option value="zero-order-zero-shipping-delay">Zero Order Zero Shipping Delay Model</option>
+                <option value="one-zero-delay">One Order Zero Shipping Delay Model</option>
+                <option value="two-zero-delay">Two Order Zero Shipping Delay Model</option>
+                <option value="two-order-two-shipping-delay">Two Order Two Shipping Delay Model</option>
+                <option value="hybrid-retailer">Hybrid Retailer Model</option>
+                <option value="hybrid-retailer-wholesaler">Hybrid Retailer-Wholesaler Model</option>
+                <option value="hybrid-factory">Hybrid Factory Model</option>
+                <option value="simple-1-2-46">Simple Policy (1-2 Delay, Demand 46.27)</option>
+                <option value="simple-1-2-48">Simple Policy (1-2 Delay, Demand 48.36)</option>
+                <option value="simple-1-2-49">Simple Policy (1-2 Delay, Demand 49.53)</option>
+                <option value="simple-1-2-51">Simple Policy (1-2 Delay, Demand 51.46)</option>
+                <option value="simple-1-2-54">Simple Policy (1-2 Delay, Demand 54.68)</option>
+            </select>
+            
+            <div class="simulation-summary">
+                <h3>Simulation Summary</h3>
+                <div id="summaryContainer"></div>
+            </div>
+            
+            <div class="bullwhip-analysis">
+                <h3>Bullwhip Effect Analysis</h3>
+                <div id="bullwhipContainer"></div>
+            </div>
+        </div>
+
+        <div class="visualization-section">
+            <h2>Orders Placed by Role (Traditional)</h2>
+            <div id="ordersChartTraditional" class="chart-container"></div>
+        </div>
+
+        <div class="visualization-section">
+            <h2>Orders Placed by Role (Blockchain)</h2>
+            <div id="ordersChartBlockchain" class="chart-container"></div>
+        </div>
+
+        <div class="visualization-section">
+            <h2>Inventory Levels by Role (Traditional)</h2>
+            <div id="inventoryChartTraditional" class="chart-container"></div>
+        </div>
+
+        <div class="visualization-section">
+            <h2>Inventory Levels by Role (Blockchain)</h2>
+            <div id="inventoryChartBlockchain" class="chart-container"></div>
+        </div>
+
+        <div class="visualization-section">
+            <h2>Backlog Levels by Role (Traditional)</h2>
+            <div id="backlogChartTraditional" class="chart-container"></div>
+        </div>
+
+        <div class="visualization-section">
+            <h2>Backlog Levels by Role (Blockchain)</h2>
+            <div id="backlogChartBlockchain" class="chart-container"></div>
+        </div>
+
+        <div class="visualization-section">
+            <h2>Weekly Costs</h2>
+            <div id="costsChart" class="chart-container"></div>
+        </div>
+        
+        <div class="visualization-section">
+            <h2>Export All Experiment Data</h2>
+            <p>This will generate an Excel file containing all statistical metrics for all experiment types.</p>
+            <button id="exportAllDataButton" class="export-all-button">Export All Experiments Data</button>
+        </div>
+        
+        <!-- Loading overlay for long operations -->
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loading-spinner"></div>
+        </div>
+        
+        <!-- Add new section for bullwhip data extraction after the "Export All Experiment Data" section -->
+        <div class="visualization-section">
+            <h2>Extract Bullwhip and Benefit Data</h2>
+            <p>Generate a table with bullwhip metrics and benefit data for all stages across all experiments.</p>
+            <button id="extractBullwhipDataButton" class="extract-data-button">Extract Bullwhip and Benefit Data</button>
+            <div id="bullwhipDataContainer"></div>
+        </div>
+        <div class="visualization-section">
+            <h2>Export Gas Cost Data</h2>
+            <p>Download weekly gas costs (per role and system) for the current simulation as CSV.</p>
+            <button id="exportGasDataButton" class="download-csv-button">Download Gas Costs CSV</button>
+        </div>
+    </div>
+
+    <script>
+        // Simulation data paths
+        const dataPaths = {
+            'standard': {
+                blockchain: 'data/simulations/sterman/standard/blockchain.json',
+                traditional: 'data/simulations/sterman/standard/traditional.json',
+                settings: {
+                    description: 'Standard Sterman Model',
+                    orderDelay: 1,
+                    shippingDelay: 1,
+                    blockchainEnabled: false,
+                    hybridRoles: []
+                }
+            },
+            'two-order-delay': {
+                blockchain: 'data/simulations/sterman/two-order-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/two-order-delay/traditional.json',
+                settings: {
+                    description: 'Two-Order Delay Model',
+                    orderDelay: 2,
+                    shippingDelay: 1,
+                    blockchainEnabled: false,
+                    hybridRoles: []
+                }
+            },
+            'hybrid-retailer': {
+                blockchain: 'data/simulations/sterman/hybrid-retailer/blockchain.json',
+                traditional: 'data/simulations/sterman/hybrid-retailer/traditional.json',
+                settings: {
+                    description: 'Hybrid Retailer Model',
+                    orderDelay: 1,
+                    shippingDelay: 1,
+                    blockchainEnabled: true,
+                    hybridRoles: ['Retailer']
+                }
+            },
+            'two-shipping-delay': {
+                blockchain: 'data/simulations/sterman/two-shipping-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/two-shipping-delay/traditional.json',
+                settings: {
+                    description: 'Two-Shipping Delay Model',
+                    orderDelay: 1,
+                    shippingDelay: 2,
+                    blockchainEnabled: false,
+                    hybridRoles: []
+                }
+            },
+            'zero-delay': {
+                blockchain: 'data/simulations/sterman/zero-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/zero-delay/traditional.json',
+                settings: {
+                    description: 'Zero Delay Model',
+                    orderDelay: 0,
+                    shippingDelay: 1,
+                    blockchainEnabled: false,
+                    hybridRoles: []
+                }
+            },
+            'zero-order-two-shipping-delay': {
+                blockchain: 'data/simulations/sterman/zero-order-two-shipping-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/zero-order-two-shipping-delay/traditional.json',
+                settings: {
+                    description: 'Zero Order Two Shipping Delay Model',
+                    orderDelay: 0,
+                    shippingDelay: 2,
+                    blockchainEnabled: false,
+                    hybridRoles: []
+                }
+            },
+            'zero-order-zero-shipping-delay': {
+                blockchain: 'data/simulations/sterman/zero-order-zero-shipping-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/zero-order-zero-shipping-delay/traditional.json',
+                settings: {
+                    description: 'Zero Order Zero Shipping Delay Model',
+                    orderDelay: 0,
+                    shippingDelay: 0,
+                    blockchainEnabled: false,
+                    hybridRoles: []
+                }
+            },
+            'one-zero-delay': {
+                blockchain: 'data/simulations/sterman/one-zero-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/one-zero-delay/traditional.json',
+                settings: {
+                    description: 'One Order Zero Shipping Delay Model',
+                    orderDelay: 1,
+                    shippingDelay: 0,
+                    blockchainEnabled: false,
+                    hybridRoles: []
+                }
+            },
+            'two-zero-delay': {
+                blockchain: 'data/simulations/sterman/two-zero-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/two-zero-delay/traditional.json',
+                settings: {
+                    description: 'Two Order Zero Shipping Delay Model',
+                    orderDelay: 2,
+                    shippingDelay: 0,
+                    blockchainEnabled: false,
+                    hybridRoles: []
+                }
+            },
+            'two-order-two-shipping-delay': {
+                blockchain: 'data/simulations/sterman/two-order-two-shipping-delay/blockchain.json',
+                traditional: 'data/simulations/sterman/two-order-two-shipping-delay/traditional.json',
+                settings: {
+                    description: 'Two Order Two Shipping Delay Model',
+                    orderDelay: 2,
+                    shippingDelay: 2,
+                    blockchainEnabled: true,
+                    hybridRoles: []
+                }
+            },
+            'hybrid-retailer-wholesaler': {
+                blockchain: 'data/simulations/sterman/hybrid-retailer-wholesaler/blockchain.json',
+                traditional: 'data/simulations/sterman/hybrid-retailer-wholesaler/traditional.json',
+                settings: {
+                    description: 'Hybrid Retailer-Wholesaler Model',
+                    orderDelay: 1,
+                    shippingDelay: 1,
+                    blockchainEnabled: true,
+                    hybridRoles: ['Retailer', 'Wholesaler']
+                }
+            },
+            'hybrid-factory': {
+                blockchain: 'data/simulations/sterman/hybrid-factory/blockchain.json',
+                traditional: 'data/simulations/sterman/hybrid-factory/traditional.json',
+                settings: {
+                    description: 'Hybrid Factory Model',
+                    orderDelay: 1,
+                    shippingDelay: 2,
+                    blockchainEnabled: true,
+                    hybridRoles: ['Retailer', 'Wholesaler', 'Distributor']
+                }
+            },
+            'simple-1-2-46': {
+                blockchain: 'data/simulations/sterman/1-2-46-simulation/blockchain.json',
+                traditional: 'data/simulations/sterman/1-2-46-simulation/traditional.json',
+                settings: {
+                    description: 'Simple Policy (1 Order, 2 Shipping Delay, Demand 46.27)',
+                    orderDelay: 1,
+                    shippingDelay: 2,
+                    blockchainEnabled: false, // Assuming these are comparable to traditional or a separate blockchain run
+                    hybridRoles: []
+                }
+            },
+            'simple-1-2-48': {
+                blockchain: 'data/simulations/sterman/1-2-48-simulation/blockchain.json',
+                traditional: 'data/simulations/sterman/1-2-48-simulation/traditional.json',
+                settings: {
+                    description: 'Simple Policy (1 Order, 2 Shipping Delay, Demand 48.36)',
+                    orderDelay: 1,
+                    shippingDelay: 2,
+                    blockchainEnabled: false, 
+                    hybridRoles: []
+                }
+            },
+            'simple-1-2-49': {
+                blockchain: 'data/simulations/sterman/1-2-49-simulation/blockchain.json',
+                traditional: 'data/simulations/sterman/1-2-49-simulation/traditional.json',
+                settings: {
+                    description: 'Simple Policy (1 Order, 2 Shipping Delay, Demand 49.53)',
+                    orderDelay: 1,
+                    shippingDelay: 2,
+                    blockchainEnabled: false, 
+                    hybridRoles: []
+                }
+            },
+            'simple-1-2-51': {
+                blockchain: 'data/simulations/sterman/1-2-51-simulation/blockchain.json',
+                traditional: 'data/simulations/sterman/1-2-51-simulation/traditional.json',
+                settings: {
+                    description: 'Simple Policy (1 Order, 2 Shipping Delay, Demand 51.46)',
+                    orderDelay: 1,
+                    shippingDelay: 2,
+                    blockchainEnabled: false, 
+                    hybridRoles: []
+                }
+            },
+            'simple-1-2-54': {
+                blockchain: 'data/simulations/sterman/1-2-54-simulation/blockchain.json',
+                traditional: 'data/simulations/sterman/1-2-54-simulation/traditional.json',
+                settings: {
+                    description: 'Simple Policy (1 Order, 2 Shipping Delay, Demand 54.68)',
+                    orderDelay: 1,
+                    shippingDelay: 2,
+                    blockchainEnabled: false, 
+                    hybridRoles: []
+                }
+            }
+        };
+
+        // Role names and colors for visualization
+        const roles = [
+            { id: 0, name: 'Retailer', color: '#1f77b4' },
+            { id: 1, name: 'Wholesaler', color: '#ff7f0e' },
+            { id: 2, name: 'Distributor', color: '#2ca02c' },
+            { id: 3, name: 'Factory', color: '#d62728' }
+        ];
+
+        // Load and display simulation data
+        let blockchainData, traditionalData, summaryData;
+        let currentSimulationType = 'standard'; // Default simulation type
+        
+        // Function to load simulation data
+        function loadSimulationData(simulationType) {
+            currentSimulationType = simulationType;
+            const paths = dataPaths[simulationType];
+            
+            // Load blockchain data
+            d3.json(paths.blockchain).then(data => {
+                blockchainData = data;
+                if (traditionalData) {
+                    renderCharts(blockchainData, traditionalData);
+                    // Generate summary data from JSON files
+                    calculateAndRenderSummary(blockchainData, traditionalData, simulationType);
+                    // Calculate and render bullwhip ratios
+                    calculateAndRenderBullwhipRatios(blockchainData, traditionalData);
+                }
+            }).catch(error => console.error("Error loading blockchain data:", error));
+            
+            // Load traditional data
+            d3.json(paths.traditional).then(data => {
+                traditionalData = data;
+                if (blockchainData) {
+                    renderCharts(blockchainData, traditionalData);
+                    // Generate summary data from JSON files
+                    calculateAndRenderSummary(blockchainData, traditionalData, simulationType);
+                    // Calculate and render bullwhip ratios
+                    calculateAndRenderBullwhipRatios(blockchainData, traditionalData);
+                }
+            }).catch(error => console.error("Error loading traditional data:", error));
+        }
+        
+        // Calculate variance of an array
+        function calculateVariance(array) {
+            const mean = array.reduce((sum, val) => sum + val, 0) / array.length;
+            const squaredDifferences = array.map(val => Math.pow(val - mean, 2));
+            const variance = squaredDifferences.reduce((sum, val) => sum + val, 0) / array.length;
+            return variance;
+        }
+        
+        // Calculate bullwhip ratio for each role
+        function calculateBullwhipRatios(data) {
+            // We need to load the actual customer demand from the CSV file
+            // Since we can't directly load it in this function, we'll create a promise
+            return new Promise((resolve, reject) => {
+                // Load the customer demand data from the CSV
+                d3.csv('../sterman_scaled_fltocrocs_data.csv').then(csvData => {
+                    console.log("CSV loaded successfully:", csvData.length, "rows");
+                    console.log("Sample data:", csvData.slice(0, 3));
+                    
+                    const bullwhipRatios = [];
+                    
+                    // Extract customer demand from the CSV
+                    const customerDemand = csvData.map(row => parseFloat(row['Units_per_Quarter_100k']));
+                    
+                    // For calculating bullwhip ratios, we need to limit to the same length as our simulation data
+                    const limitedCustomerDemand = customerDemand.slice(0, data.length);
+                    
+                    // Calculate variance of the customer demand
+                    const customerDemandVariance = calculateVariance(limitedCustomerDemand);
+                    
+                    // Calculate bullwhip ratio for each role
+                    for (let roleId = 0; roleId < 4; roleId++) {
+                        // Extract orders placed by this role
+                        const ordersPlaced = data.map(week => week.orders[roleId]);
+                        const orderVariance = calculateVariance(ordersPlaced);
+                        
+                        if (roleId === 0) {
+                            // For retailer, compare to actual customer demand variance
+                            if (customerDemandVariance === 0) {
+                                // Handle zero variance in customer demand
+                                if (orderVariance > 0) {
+                                    bullwhipRatios.push(2.0); // Amplification from constant demand
+                                } else {
+                                    bullwhipRatios.push(1.0); // Constant demand, constant orders
+                                }
+                            } else {
+                                // Normal case: Calculate bullwhip ratio
+                                const bullwhipRatio = orderVariance / customerDemandVariance;
+                                bullwhipRatios.push(bullwhipRatio);
+                            }
+                        } else {
+                            // For other roles, compare to orders from downstream partner
+                            const downstreamOrders = data.map(week => week.orders[roleId - 1]);
+                            const demandVariance = calculateVariance(downstreamOrders);
+                            
+                            // Calculate bullwhip ratio, handling edge case of zero variance
+                            if (demandVariance === 0) {
+                                if (orderVariance > 0) {
+                                    bullwhipRatios.push(2.0); // Indicate presence of bullwhip effect
+                                } else {
+                                    bullwhipRatios.push(1.0); // No variance in orders either
+                                }
+                            } else {
+                                const bullwhipRatio = orderVariance / demandVariance;
+                                bullwhipRatios.push(bullwhipRatio);
+                            }
+                        }
+                    }
+                    
+                    resolve(bullwhipRatios);
+                }).catch(error => {
+                    console.error("Error loading customer demand data:", error);
+                    console.error("Attempted to load from path: ../sterman_scaled_fltocrocs_data.csv");
+                    // Fallback to a simplified calculation if CSV loading fails
+                    const bullwhipRatios = calculateFallbackBullwhipRatios(data);
+                    resolve(bullwhipRatios);
+                });
+            });
+        }
+        
+        // Fallback calculation if CSV loading fails
+        function calculateFallbackBullwhipRatios(data) {
+            const bullwhipRatios = [];
+            
+            // First, get the variance of incoming orders/demand for each role
+            const demandVariances = [];
+            
+            // For retailer, use a variable customer demand (fallback)
+            // Instead of constant 4, use variable data to create variance
+            const customerDemand = [];
+            for (let i = 0; i < data.length; i++) {
+                // Create a pattern with some variance (values between 4-8)
+                const baseValue = 6;
+                const variance = Math.sin(i * 0.4) * 2;
+                customerDemand.push(baseValue + variance);
+            }
+            demandVariances.push(calculateVariance(customerDemand));
+            
+            // For all other roles, their demand is the orders from the downstream partner
+            for (let roleId = 0; roleId < 3; roleId++) {
+                const demandData = data.map(week => week.orders[roleId]);
+                demandVariances.push(calculateVariance(demandData));
+            }
+            
+            // Calculate bullwhip ratio for each role
+            for (let roleId = 0; roleId < 4; roleId++) {
+                // Extract orders placed by this role
+                const ordersPlaced = data.map(week => week.orders[roleId]);
+                const orderVariance = calculateVariance(ordersPlaced);
+                
+                // Get the corresponding demand variance
+                const demandVariance = demandVariances[roleId];
+                
+                // Handle case where demand variance is zero (constant demand)
+                if (demandVariance === 0) {
+                    // If demand is constant but orders vary, there is bullwhip effect
+                    if (orderVariance > 0) {
+                        bullwhipRatios.push(2.0); // Indicate presence of bullwhip effect
+                    } else {
+                        bullwhipRatios.push(1.0); // No variance in orders either, so no effect
+                    }
+                } else {
+                    // Normal case - calculate bullwhip ratio
+                    const bullwhipRatio = orderVariance / demandVariance;
+                    bullwhipRatios.push(bullwhipRatio);
+                }
+            }
+            
+            return bullwhipRatios;
+        }
+        
+        // Calculate and render bullwhip ratios
+        function calculateAndRenderBullwhipRatios(blockchainData, traditionalData) {
+            if (!blockchainData || !traditionalData) return;
+            
+            // Calculate bullwhip ratios for each setup (now returns promises)
+            Promise.all([
+                calculateBullwhipRatios(traditionalData),
+                calculateBullwhipRatios(blockchainData)
+            ]).then(([traditionalRatios, blockchainRatios]) => {
+                // Render the bullwhip ratio table
+                renderBullwhipRatios(traditionalRatios, blockchainRatios);
+            }).catch(error => {
+                console.error("Error calculating bullwhip ratios:", error);
+            });
+        }
+        
+        // Render bullwhip ratio table
+        function renderBullwhipRatios(traditionalRatios, blockchainRatios) {
+            const container = document.getElementById('bullwhipContainer');
+            container.innerHTML = '';
+            
+            // Add explanation
+            const explanation = document.createElement('div');
+            explanation.style.marginBottom = '15px';
+            explanation.innerHTML = `
+                <p><strong>Bullwhip Ratio</strong> = Variance of Orders / Variance of Demand</p>
+                <ul>
+                    <li><span class="bullwhip-indicator amplification">&gt;1</span>: Bullwhip effect present (amplification)</li>
+                    <li><span class="bullwhip-indicator no-effect">=1</span>: No bullwhip effect (demand variance = order variance)</li>
+                    <li><span class="bullwhip-indicator dampening">&lt;1</span>: Dampening effect (orders less variable than demand)</li>
+                </ul>
+            `;
+            container.appendChild(explanation);
+            
+            // Create bullwhip ratio table
+            const table = document.createElement('table');
+            table.className = 'comparison-table';
+            
+            // Create table header
+            const tableHeader = document.createElement('thead');
+            let headerHTML = '<tr><th>Scenario</th>';
+            
+            roles.forEach(role => {
+                headerHTML += `<th>${role.name}</th>`;
+            });
+            
+            headerHTML += '</tr>';
+            tableHeader.innerHTML = headerHTML;
+            table.appendChild(tableHeader);
+            
+            // Create table body
+            const tableBody = document.createElement('tbody');
+            
+            // Traditional row
+            let traditionalRowHTML = '<tr><td>Traditional</td>';
+            traditionalRatios.forEach(ratio => {
+                let className = '';
+                if (ratio > 1.05) className = 'amplification';
+                else if (ratio < 0.95) className = 'dampening';
+                else className = 'no-effect';
+                
+                traditionalRowHTML += `<td><span class="bullwhip-indicator ${className}">${ratio.toFixed(2)}</span></td>`;
+            });
+            traditionalRowHTML += '</tr>';
+            
+            // Blockchain row
+            let blockchainRowHTML = '<tr><td>Blockchain</td>';
+            blockchainRatios.forEach(ratio => {
+                let className = '';
+                if (ratio > 1.05) className = 'amplification';
+                else if (ratio < 0.95) className = 'dampening';
+                else className = 'no-effect';
+                
+                blockchainRowHTML += `<td><span class="bullwhip-indicator ${className}">${ratio.toFixed(2)}</span></td>`;
+            });
+            blockchainRowHTML += '</tr>';
+            
+            tableBody.innerHTML = traditionalRowHTML + blockchainRowHTML;
+            table.appendChild(tableBody);
+            
+            // Add table to container
+            container.appendChild(table);
+            
+            // Add improvement calculation
+            const improvements = document.createElement('div');
+            improvements.style.marginTop = '15px';
+            
+            let improvementHTML = '<h4>Bullwhip Effect Reduction</h4><table class="comparison-table"><thead><tr><th>Role</th><th>Reduction</th></tr></thead><tbody>';
+            
+            roles.forEach((role, index) => {
+                const reduction = traditionalRatios[index] - blockchainRatios[index];
+                const reductionPercent = (reduction / traditionalRatios[index] * 100).toFixed(2);
+                const isImprovement = reduction > 0;
+                
+                improvementHTML += `
+                    <tr>
+                        <td>${role.name}</td>
+                        <td style="color: ${isImprovement ? 'green' : 'red'}">
+                            ${isImprovement ? '▼' : '▲'} ${Math.abs(reductionPercent)}% 
+                            (${traditionalRatios[index].toFixed(2)} → ${blockchainRatios[index].toFixed(2)})
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            improvementHTML += '</tbody></table>';
+            improvements.innerHTML = improvementHTML;
+            container.appendChild(improvements);
+        }
+        
+        // Calculate statistical metrics for arrays of numeric values
+        function calculateStatistics(data) {
+            if (!data || data.length === 0) return null;
+            
+            // Basic calculations
+            const sum = data.reduce((acc, val) => acc + val, 0);
+            const mean = sum / data.length;
+            
+            // Sort data for median, min, max
+            const sortedData = [...data].sort((a, b) => a - b);
+            const min = sortedData[0];
+            const max = sortedData[sortedData.length - 1];
+            
+            // Calculate median
+            let median;
+            const midIndex = Math.floor(sortedData.length / 2);
+            if (sortedData.length % 2 === 0) {
+                median = (sortedData[midIndex - 1] + sortedData[midIndex]) / 2;
+            } else {
+                median = sortedData[midIndex];
+            }
+            
+            // Calculate standard deviation
+            const squaredDiffs = data.map(val => Math.pow(val - mean, 2));
+            const variance = squaredDiffs.reduce((acc, val) => acc + val, 0) / data.length;
+            const stdDev = Math.sqrt(variance);
+            
+            // Calculate coefficient of variation
+            const cv = mean !== 0 ? stdDev / mean : 0;
+            
+            // Count peaks (local maxima)
+            let peakCount = 0;
+            for (let i = 1; i < data.length - 1; i++) {
+                if (data[i] > data[i-1] && data[i] > data[i+1]) {
+                    peakCount++;
+                }
+            }
+            
+            // Calculate stockout rate (when inventory <= 0)
+            // Note: This only applies to inventory data
+            const stockoutCount = data.filter(val => val <= 0).length;
+            const stockoutRate = stockoutCount / data.length;
+            
+            // Calculate autocorrelation (lag-1)
+            let autocorrelation = 0;
+            if (data.length > 1) {
+                let numerator = 0;
+                let denominator = 0;
+                
+                for (let i = 0; i < data.length - 1; i++) {
+                    numerator += (data[i] - mean) * (data[i + 1] - mean);
+                }
+                
+                for (let i = 0; i < data.length; i++) {
+                    denominator += Math.pow(data[i] - mean, 2);
+                }
+                
+                autocorrelation = denominator !== 0 ? numerator / denominator : 0;
+            }
+            
+            return {
+                mean: mean.toFixed(2),
+                median: median.toFixed(2),
+                min: min.toFixed(2),
+                max: max.toFixed(2),
+                stdDev: stdDev.toFixed(2),
+                cv: cv.toFixed(2),
+                peakCount,
+                stockoutRate: stockoutRate.toFixed(2),
+                autocorrelation: autocorrelation.toFixed(2)
+            };
+        }
+        
+        // Calculate percentage change between two values
+        function calculatePercentageChange(oldValue, newValue) {
+            if (oldValue === 0) return newValue === 0 ? "0.00" : "∞";
+            return ((newValue - oldValue) / Math.abs(oldValue) * 100).toFixed(2);
+        }
+        
+        // Calculate all statistics for simulation data
+        function calculateSimulationStatistics(traditionalData, blockchainData) {
+            if (!traditionalData || !blockchainData) return null;
+            
+            const metrics = {
+                orders: { traditional: [], blockchain: [], differences: [] },
+                inventory: { traditional: [], blockchain: [], differences: [] },
+                backlog: { traditional: [], blockchain: [], differences: [] },
+                operationalCosts: { traditional: [], blockchain: [], differences: [] }
+            };
+            
+            // For each role, calculate statistics
+            for (let role = 0; role < 4; role++) {
+                // Extract data arrays for each role and variable
+                const tradOrders = traditionalData.map(week => week.orders[role]);
+                const bcOrders = blockchainData.map(week => week.orders[role]);
+                
+                const tradInventory = traditionalData.map(week => week.inventory[role]);
+                const bcInventory = blockchainData.map(week => week.inventory[role]);
+                
+                const tradBacklog = traditionalData.map(week => week.backlog[role]);
+                const bcBacklog = blockchainData.map(week => week.backlog[role]);
+                
+                const tradCosts = traditionalData.map(week => week.operationalCost[role]);
+                const bcCosts = blockchainData.map(week => week.operationalCost[role]);
+                
+                // Calculate statistics for each variable
+                const orderStats = {
+                    traditional: calculateStatistics(tradOrders),
+                    blockchain: calculateStatistics(bcOrders)
+                };
+                
+                const inventoryStats = {
+                    traditional: calculateStatistics(tradInventory),
+                    blockchain: calculateStatistics(bcInventory)
+                };
+                
+                const backlogStats = {
+                    traditional: calculateStatistics(tradBacklog),
+                    blockchain: calculateStatistics(bcBacklog)
+                };
+                
+                const costStats = {
+                    traditional: calculateStatistics(tradCosts),
+                    blockchain: calculateStatistics(bcCosts)
+                };
+                
+                // Calculate differences and percentage changes
+                orderStats.differences = calculateMetricDifferences(orderStats.traditional, orderStats.blockchain);
+                inventoryStats.differences = calculateMetricDifferences(inventoryStats.traditional, inventoryStats.blockchain);
+                backlogStats.differences = calculateMetricDifferences(backlogStats.traditional, backlogStats.blockchain);
+                costStats.differences = calculateMetricDifferences(costStats.traditional, costStats.blockchain);
+                
+                // Add to metrics object
+                metrics.orders.traditional.push(orderStats.traditional);
+                metrics.orders.blockchain.push(orderStats.blockchain);
+                metrics.orders.differences.push(orderStats.differences);
+                
+                metrics.inventory.traditional.push(inventoryStats.traditional);
+                metrics.inventory.blockchain.push(inventoryStats.blockchain);
+                metrics.inventory.differences.push(inventoryStats.differences);
+                
+                metrics.backlog.traditional.push(backlogStats.traditional);
+                metrics.backlog.blockchain.push(backlogStats.blockchain);
+                metrics.backlog.differences.push(backlogStats.differences);
+                
+                metrics.operationalCosts.traditional.push(costStats.traditional);
+                metrics.operationalCosts.blockchain.push(costStats.blockchain);
+                metrics.operationalCosts.differences.push(costStats.differences);
+            }
+            
+            return metrics;
+        }
+        
+        // Calculate differences and percentage changes between traditional and blockchain metrics
+        function calculateMetricDifferences(traditional, blockchain) {
+            if (!traditional || !blockchain) return null;
+            
+            return {
+                mean: {
+                    absolute: (blockchain.mean - traditional.mean).toFixed(2),
+                    percentage: calculatePercentageChange(parseFloat(traditional.mean), parseFloat(blockchain.mean))
+                },
+                median: {
+                    absolute: (blockchain.median - traditional.median).toFixed(2),
+                    percentage: calculatePercentageChange(parseFloat(traditional.median), parseFloat(blockchain.median))
+                },
+                min: {
+                    absolute: (blockchain.min - traditional.min).toFixed(2),
+                    percentage: calculatePercentageChange(parseFloat(traditional.min), parseFloat(blockchain.min))
+                },
+                max: {
+                    absolute: (blockchain.max - traditional.max).toFixed(2),
+                    percentage: calculatePercentageChange(parseFloat(traditional.max), parseFloat(blockchain.max))
+                },
+                stdDev: {
+                    absolute: (blockchain.stdDev - traditional.stdDev).toFixed(2),
+                    percentage: calculatePercentageChange(parseFloat(traditional.stdDev), parseFloat(blockchain.stdDev))
+                },
+                cv: {
+                    absolute: (blockchain.cv - traditional.cv).toFixed(2),
+                    percentage: calculatePercentageChange(parseFloat(traditional.cv), parseFloat(blockchain.cv))
+                },
+                peakCount: {
+                    absolute: blockchain.peakCount - traditional.peakCount,
+                    percentage: calculatePercentageChange(traditional.peakCount, blockchain.peakCount)
+                },
+                stockoutRate: {
+                    absolute: (blockchain.stockoutRate - traditional.stockoutRate).toFixed(2),
+                    percentage: calculatePercentageChange(parseFloat(traditional.stockoutRate), parseFloat(blockchain.stockoutRate))
+                },
+                autocorrelation: {
+                    absolute: (blockchain.autocorrelation - traditional.autocorrelation).toFixed(2),
+                    percentage: calculatePercentageChange(parseFloat(traditional.autocorrelation), parseFloat(blockchain.autocorrelation))
+                }
+            };
+        }
+        
+        // Calculate summary from JSON data
+        function calculateAndRenderSummary(blockchainData, traditionalData, simulationType) {
+            if (!blockchainData || !traditionalData) return;
+            
+            // Get the last week's cumulative cost for the total cost
+            const traditionalTotalCost = traditionalData[traditionalData.length - 1].cumulativeCost.reduce((sum, cost) => sum + cost, 0);
+            const blockchainTotalCost = blockchainData[blockchainData.length - 1].cumulativeCost.reduce((sum, cost) => sum + cost, 0);
+            
+            // Calculate cost reduction
+            const costReduction = traditionalTotalCost - blockchainTotalCost;
+            const costReductionPercent = ((costReduction / traditionalTotalCost) * 100).toFixed(2);
+            
+            // Calculate statistical metrics
+            const statisticalMetrics = calculateSimulationStatistics(traditionalData, blockchainData);
+            
+            // Create summary object
+            const summary = {
+                Periods: blockchainData.length,
+                TraditionalCost: traditionalTotalCost.toFixed(2),
+                BlockchainCost: blockchainTotalCost.toFixed(2),
+                CostReduction: costReduction.toFixed(2),
+                CostReductionPercent: costReductionPercent,
+                settings: dataPaths[simulationType].settings,
+                metrics: statisticalMetrics
+            };
+            
+            // Render the summary
+            renderSummary(summary, simulationType);
+            
+            // Render the detailed statistical metrics
+            renderStatisticalMetrics(statisticalMetrics);
+        }
+        
+        // Render statistical metrics tables
+        function renderStatisticalMetrics(metrics) {
+            if (!metrics) return;
+            
+            const container = document.getElementById('summaryContainer');
+            
+            // Create statistics section
+            const statsSection = document.createElement('div');
+            statsSection.className = 'statistics-section';
+            statsSection.style.marginTop = '30px';
+            
+            // Add section title with toggle button
+            const titleContainer = document.createElement('div');
+            titleContainer.style.display = 'flex';
+            titleContainer.style.justifyContent = 'space-between';
+            titleContainer.style.alignItems = 'center';
+            titleContainer.style.marginBottom = '15px';
+            
+            const sectionTitle = document.createElement('h3');
+            sectionTitle.textContent = 'Statistical Metrics';
+            
+            const buttonGroup = document.createElement('div');
+            buttonGroup.className = 'button-group';
+            
+            const toggleButton = document.createElement('button');
+            toggleButton.textContent = 'Hide Details';
+            toggleButton.className = 'toggle-button';
+            toggleButton.style.padding = '5px 10px';
+            toggleButton.style.cursor = 'pointer';
+            
+            // Create Excel export button
+            const exportButton = document.createElement('button');
+            exportButton.textContent = 'Export to Excel';
+            exportButton.className = 'export-button';
+            exportButton.onclick = function() {
+                exportMetricsToExcel(metrics, currentSimulationType);
+            };
+            
+            // Add content container that can be toggled
+            const contentContainer = document.createElement('div');
+            contentContainer.className = 'metrics-content';
+            
+            toggleButton.onclick = function() {
+                if (contentContainer.style.display === 'none') {
+                    contentContainer.style.display = 'block';
+                    this.textContent = 'Hide Details';
+                } else {
+                    contentContainer.style.display = 'none';
+                    this.textContent = 'Show Details';
+                }
+            };
+            
+            // Add buttons to button group
+            buttonGroup.appendChild(toggleButton);
+            buttonGroup.appendChild(exportButton);
+            
+            titleContainer.appendChild(sectionTitle);
+            titleContainer.appendChild(buttonGroup);
+            statsSection.appendChild(titleContainer);
+            statsSection.appendChild(contentContainer);
+            
+            // Create tabs for different metrics
+            const tabContainer = document.createElement('div');
+            tabContainer.className = 'tab-container';
+            
+            const tabLabels = ['Orders', 'Inventory', 'Backlog', 'Costs'];
+            const tabKeys = ['orders', 'inventory', 'backlog', 'operationalCosts'];
+            
+            // Create tab buttons
+            tabLabels.forEach((label, index) => {
+                const tabButton = document.createElement('button');
+                tabButton.textContent = label;
+                tabButton.className = `tab-button ${index === 0 ? 'active' : ''}`;
+                
+                tabButton.onclick = function() {
+                    // Reset all tab buttons
+                    const allButtons = tabContainer.querySelectorAll('.tab-button');
+                    allButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Highlight clicked button
+                    this.classList.add('active');
+                    
+                    // Hide all tab content
+                    const allTabs = contentContainer.querySelectorAll('.metrics-tab');
+                    allTabs.forEach(tab => {
+                        tab.style.display = 'none';
+                    });
+                    
+                    // Show selected tab
+                    const selectedTab = document.getElementById(`metrics-tab-${tabKeys[index]}`);
+                    if (selectedTab) {
+                        selectedTab.style.display = 'block';
+                    }
+                };
+                
+                tabContainer.appendChild(tabButton);
+            });
+            
+            contentContainer.appendChild(tabContainer);
+            
+            // Create content for each tab
+            tabKeys.forEach((key, index) => {
+                const tabContent = document.createElement('div');
+                tabContent.id = `metrics-tab-${key}`;
+                tabContent.className = 'metrics-tab';
+                tabContent.style.display = index === 0 ? 'block' : 'none';
+                
+                // Title for the current metric
+                const metricTitle = document.createElement('h4');
+                metricTitle.textContent = `${tabLabels[index]} Metrics`;
+                tabContent.appendChild(metricTitle);
+                
+                // Create table for the metrics
+                const metricsTable = createMetricsTable(metrics[key]);
+                tabContent.appendChild(metricsTable);
+                
+                contentContainer.appendChild(tabContent);
+            });
+            
+            // Add to container
+            container.appendChild(statsSection);
+        }
+        
+        // Create a table for a specific metric type (orders, inventory, etc.)
+        function createMetricsTable(metricData) {
+            const table = document.createElement('table');
+            table.className = 'comparison-table metrics-table';
+            table.style.width = '100%';
+            table.style.borderCollapse = 'collapse';
+            table.style.marginTop = '10px';
+            
+            // Table headers
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            
+            // Role column
+            const roleHeader = document.createElement('th');
+            roleHeader.textContent = 'Role';
+            roleHeader.rowSpan = 2;
+            headerRow.appendChild(roleHeader);
+            
+            // Metric columns
+            const metricNames = ['Mean', 'Median', 'Min', 'Max', 'StdDev', 'CV', 'Peaks', 'Stockout Rate', 'Autocorrelation'];
+            metricNames.forEach(name => {
+                const th = document.createElement('th');
+                th.colSpan = 3;
+                th.textContent = name;
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            
+            // Subheader row for categories
+            const subHeaderRow = document.createElement('tr');
+            
+            metricNames.forEach(() => {
+                ['Traditional', 'Blockchain', 'Change (%)'].forEach(category => {
+                    const th = document.createElement('th');
+                    th.textContent = category;
+                    subHeaderRow.appendChild(th);
+                });
+            });
+            
+            thead.appendChild(subHeaderRow);
+            table.appendChild(thead);
+            
+            // Table body
+            const tbody = document.createElement('tbody');
+            
+            // Add data for each role
+            roles.forEach((role, roleIndex) => {
+                const row = document.createElement('tr');
+                
+                // Role cell
+                const roleCell = document.createElement('td');
+                roleCell.textContent = role.name;
+                row.appendChild(roleCell);
+                
+                // Add cells for each metric
+                addMetricCells(row, 'mean', metricData, roleIndex);
+                addMetricCells(row, 'median', metricData, roleIndex);
+                addMetricCells(row, 'min', metricData, roleIndex);
+                addMetricCells(row, 'max', metricData, roleIndex);
+                addMetricCells(row, 'stdDev', metricData, roleIndex);
+                addMetricCells(row, 'cv', metricData, roleIndex);
+                addMetricCells(row, 'peakCount', metricData, roleIndex);
+                addMetricCells(row, 'stockoutRate', metricData, roleIndex);
+                addMetricCells(row, 'autocorrelation', metricData, roleIndex);
+                
+                tbody.appendChild(row);
+            });
+            
+            table.appendChild(tbody);
+            
+            return table;
+        }
+        
+        // Helper function to add cells for a specific metric
+        function addMetricCells(row, metricKey, metricData, roleIndex) {
+            // Traditional value
+            const tradCell = document.createElement('td');
+            tradCell.textContent = metricData.traditional[roleIndex][metricKey];
+            row.appendChild(tradCell);
+            
+            // Blockchain value
+            const bcCell = document.createElement('td');
+            bcCell.textContent = metricData.blockchain[roleIndex][metricKey];
+            row.appendChild(bcCell);
+            
+            // Change percentage
+            const changeCell = document.createElement('td');
+            const change = metricData.differences[roleIndex][metricKey].percentage;
+            changeCell.textContent = `${change}%`;
+            
+            // Color code improvements/deteriorations
+            if (metricKey === 'stockoutRate') {
+                // Lower stockout rate is better
+                if (parseFloat(change) < 0) {
+                    changeCell.style.color = 'green';
+                } else if (parseFloat(change) > 0) {
+                    changeCell.style.color = 'red';
+                }
+            } else if (metricKey === 'peakCount' || metricKey === 'cv' || metricKey === 'stdDev') {
+                // Lower variability is better
+                if (parseFloat(change) < 0) {
+                    changeCell.style.color = 'green';
+                } else if (parseFloat(change) > 0) {
+                    changeCell.style.color = 'red';
+                }
+            }
+            
+            row.appendChild(changeCell);
+        }
+        
+        // Export metrics to Excel
+        function exportMetricsToExcel(metrics, simulationType) {
+            if (!metrics) return;
+            
+            // Role names for the spreadsheet
+            const roleNames = roles.map(role => role.name);
+            
+            // Create a new workbook
+            const wb = XLSX.utils.book_new();
+            
+            // Create worksheets for each metric type
+            const metricTypes = [
+                { key: 'orders', name: 'Orders Metrics' },
+                { key: 'inventory', name: 'Inventory Metrics' },
+                { key: 'backlog', name: 'Backlog Metrics' },
+                { key: 'operationalCosts', name: 'Costs Metrics' }
+            ];
+            
+            metricTypes.forEach(metricType => {
+                // Create data array for this metric type
+                const data = [];
+                
+                // Headers row
+                const headers = [
+                    'Role', 
+                    'Mean (Trad)', 'Mean (BC)', 'Mean (% Change)',
+                    'Median (Trad)', 'Median (BC)', 'Median (% Change)',
+                    'Min (Trad)', 'Min (BC)', 'Min (% Change)',
+                    'Max (Trad)', 'Max (BC)', 'Max (% Change)',
+                    'StdDev (Trad)', 'StdDev (BC)', 'StdDev (% Change)',
+                    'CV (Trad)', 'CV (BC)', 'CV (% Change)',
+                    'Peaks (Trad)', 'Peaks (BC)', 'Peaks (% Change)',
+                    'Stockout Rate (Trad)', 'Stockout Rate (BC)', 'Stockout Rate (% Change)',
+                    'Autocorrelation (Trad)', 'Autocorrelation (BC)', 'Autocorrelation (% Change)'
+                ];
+                data.push(headers);
+                
+                // Add data for each role
+                roleNames.forEach((roleName, index) => {
+                    const traditional = metrics[metricType.key].traditional[index];
+                    const blockchain = metrics[metricType.key].blockchain[index];
+                    const differences = metrics[metricType.key].differences[index];
+                    
+                    const row = [
+                        roleName,
+                        traditional.mean, blockchain.mean, differences.mean.percentage + '%',
+                        traditional.median, blockchain.median, differences.median.percentage + '%',
+                        traditional.min, blockchain.min, differences.min.percentage + '%',
+                        traditional.max, blockchain.max, differences.max.percentage + '%',
+                        traditional.stdDev, blockchain.stdDev, differences.stdDev.percentage + '%',
+                        traditional.cv, blockchain.cv, differences.cv.percentage + '%',
+                        traditional.peakCount, blockchain.peakCount, differences.peakCount.percentage + '%',
+                        traditional.stockoutRate, blockchain.stockoutRate, differences.stockoutRate.percentage + '%',
+                        traditional.autocorrelation, blockchain.autocorrelation, differences.autocorrelation.percentage + '%'
+                    ];
+                    
+                    data.push(row);
+                });
+                
+                // Create worksheet with the data
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                
+                // Set column widths
+                const columnWidths = data[0].map((_, i) => ({ wch: i === 0 ? 12 : 15 }));
+                ws['!cols'] = columnWidths;
+                
+                // Add worksheet to workbook
+                XLSX.utils.book_append_sheet(wb, ws, metricType.name);
+            });
+            
+            // Generate file name with simulation type and date
+            const dateStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+            const fileName = `Sterman_${simulationType}_Metrics_${dateStr}.xlsx`;
+            
+            // Export the workbook
+            XLSX.writeFile(wb, fileName);
+        }
+        
+        // Function to export metrics from all experiments to a single Excel file
+        async function exportAllMetricsToExcel() {
+            // Show loading overlay
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            try {
+                // Create a new workbook
+                const wb = XLSX.utils.book_new();
+                
+                // Create a summary sheet for comparison across experiments
+                await createExperimentComparisonSheet(wb);
+                
+                // Process each experiment
+                const experimentKeys = Object.keys(dataPaths);
+                for (const experimentKey of experimentKeys) {
+                    await processExperimentForExport(wb, experimentKey);
+                }
+                
+                // Generate file name with date
+                const dateStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+                const fileName = `Beer_Distribution_Game_All_Experiments_${dateStr}.xlsx`;
+                
+                // Export the workbook
+                XLSX.writeFile(wb, fileName);
+            } catch (error) {
+                console.error("Error exporting all metrics:", error);
+                alert("An error occurred while exporting data. Please try again.");
+            } finally {
+                // Hide loading overlay
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        }
+        
+        // Process an individual experiment for export
+        async function processExperimentForExport(workbook, experimentKey) {
+            try {
+                const paths = dataPaths[experimentKey];
+                
+                // Load blockchain data
+                const blockchainResponse = await fetch(paths.blockchain);
+                const blockchainData = await blockchainResponse.json();
+                
+                // Load traditional data
+                const traditionalResponse = await fetch(paths.traditional);
+                const traditionalData = await traditionalResponse.json();
+                
+                // Calculate statistical metrics
+                const metrics = calculateSimulationStatistics(traditionalData, blockchainData);
+                
+                // Create worksheets for each metric type
+                const metricTypes = [
+                    { key: 'orders', name: 'Orders' },
+                    { key: 'inventory', name: 'Inventory' },
+                    { key: 'backlog', name: 'Backlog' },
+                    { key: 'operationalCosts', name: 'Costs' }
+                ];
+                
+                const roleNames = roles.map(role => role.name);
+                
+                metricTypes.forEach(metricType => {
+                    // Create data array for this metric type
+                    const data = [];
+                    
+                    // Headers row
+                    const headers = [
+                        'Role', 
+                        'Mean (Trad)', 'Mean (BC)', 'Mean (% Change)',
+                        'Median (Trad)', 'Median (BC)', 'Median (% Change)',
+                        'Min (Trad)', 'Min (BC)', 'Min (% Change)',
+                        'Max (Trad)', 'Max (BC)', 'Max (% Change)',
+                        'StdDev (Trad)', 'StdDev (BC)', 'StdDev (% Change)',
+                        'CV (Trad)', 'CV (BC)', 'CV (% Change)',
+                        'Peaks (Trad)', 'Peaks (BC)', 'Peaks (% Change)',
+                        'Stockout Rate (Trad)', 'Stockout Rate (BC)', 'Stockout Rate (% Change)',
+                        'Autocorrelation (Trad)', 'Autocorrelation (BC)', 'Autocorrelation (% Change)'
+                    ];
+                    data.push(headers);
+                    
+                    // Add data for each role
+                    roleNames.forEach((roleName, index) => {
+                        const traditional = metrics[metricType.key].traditional[index];
+                        const blockchain = metrics[metricType.key].blockchain[index];
+                        const differences = metrics[metricType.key].differences[index];
+                        
+                        const row = [
+                            roleName,
+                            traditional.mean, blockchain.mean, differences.mean.percentage + '%',
+                            traditional.median, blockchain.median, differences.median.percentage + '%',
+                            traditional.min, blockchain.min, differences.min.percentage + '%',
+                            traditional.max, blockchain.max, differences.max.percentage + '%',
+                            traditional.stdDev, blockchain.stdDev, differences.stdDev.percentage + '%',
+                            traditional.cv, blockchain.cv, differences.cv.percentage + '%',
+                            traditional.peakCount, blockchain.peakCount, differences.peakCount.percentage + '%',
+                            traditional.stockoutRate, blockchain.stockoutRate, differences.stockoutRate.percentage + '%',
+                            traditional.autocorrelation, blockchain.autocorrelation, differences.autocorrelation.percentage + '%'
+                        ];
+                        
+                        data.push(row);
+                    });
+                    
+                    // Create worksheet with the data
+                    const ws = XLSX.utils.aoa_to_sheet(data);
+                    
+                    // Set column widths
+                    const columnWidths = data[0].map((_, i) => ({ wch: i === 0 ? 12 : 15 }));
+                    ws['!cols'] = columnWidths;
+                    
+                    // Format the headers as bold
+                    const range = XLSX.utils.decode_range(ws['!ref']);
+                    for (let C = range.s.c; C <= range.e.c; ++C) {
+                        const cellRef = XLSX.utils.encode_cell({r: 0, c: C});
+                        if (!ws[cellRef]) continue;
+                        if (!ws[cellRef].s) ws[cellRef].s = {};
+                        ws[cellRef].s.font = { bold: true };
+                    }
+                    
+                    // Sanitize experiment and metric names for Excel (max 31 chars)
+                    const sheetName = `${experimentKey.substring(0, 20)}_${metricType.name}`.substring(0, 31);
+                    
+                    // Add worksheet to workbook
+                    XLSX.utils.book_append_sheet(workbook, ws, sheetName);
+                });
+                
+                // Add cost summary sheet for this experiment
+                createCostSummarySheet(workbook, experimentKey, blockchainData, traditionalData);
+                
+                return true;
+            } catch (error) {
+                console.error(`Error processing experiment ${experimentKey}:`, error);
+                return false;
+            }
+        }
+        
+        // Create a summary sheet comparing costs across all experiments
+        async function createExperimentComparisonSheet(workbook) {
+            try {
+                // Prepare data for the comparison sheet
+                const experimentKeys = Object.keys(dataPaths);
+                const summaryData = [];
+                
+                // Add header row
+                const headers = [
+                    'Experiment', 
+                    'Periods',
+                    'Order Delay', 
+                    'Shipping Delay',
+                    'Traditional Total Cost', 
+                    'Blockchain Total Cost', 
+                    'Cost Reduction', 
+                    'Cost Reduction %',
+                    'Retailer Trad Cost',
+                    'Retailer BC Cost',
+                    'Retailer Cost Reduction %',
+                    'Wholesaler Trad Cost',
+                    'Wholesaler BC Cost',
+                    'Wholesaler Cost Reduction %',
+                    'Distributor Trad Cost',
+                    'Distributor BC Cost',
+                    'Distributor Cost Reduction %',
+                    'Factory Trad Cost',
+                    'Factory BC Cost',
+                    'Factory Cost Reduction %'
+                ];
+                summaryData.push(headers);
+                
+                // Process each experiment for the summary
+                for (const experimentKey of experimentKeys) {
+                    const paths = dataPaths[experimentKey];
+                    
+                    // Load blockchain data
+                    const blockchainResponse = await fetch(paths.blockchain);
+                    const blockchainData = await blockchainResponse.json();
+                    
+                    // Load traditional data
+                    const traditionalResponse = await fetch(paths.traditional);
+                    const traditionalData = await traditionalResponse.json();
+                    
+                    // Get the last week for final costs
+                    const finalWeek = Math.min(blockchainData.length - 1, traditionalData.length - 1);
+                    
+                    // Calculate total costs (operational costs only - from cumulativeCost)
+                    const traditionaTotalCost = traditionalData[finalWeek].cumulativeCost.reduce((sum, cost) => sum + cost, 0);
+                    const blockchainTotalCost = blockchainData[finalWeek].cumulativeCost.reduce((sum, cost) => sum + cost, 0);
+                    const costReduction = traditionaTotalCost - blockchainTotalCost;
+                    const costReductionPercent = ((costReduction / traditionaTotalCost) * 100).toFixed(2);
+                    
+                    // Get individual role costs
+                    const roleCosts = [];
+                    for (let i = 0; i < 4; i++) {
+                        const tradCost = traditionalData[finalWeek].cumulativeCost[i];
+                        const bcCost = blockchainData[finalWeek].cumulativeCost[i];
+                        const roleReduction = ((tradCost - bcCost) / tradCost * 100).toFixed(2);
+                        roleCosts.push({
+                            tradCost: tradCost.toFixed(2),
+                            bcCost: bcCost.toFixed(2),
+                            reduction: roleReduction
+                        });
+                    }
+                    
+                    // Create row for this experiment
+                    const row = [
+                        paths.description,
+                        blockchainData.length,
+                        paths.settings.orderDelay,
+                        paths.settings.shippingDelay,
+                        traditionaTotalCost.toFixed(2),
+                        blockchainTotalCost.toFixed(2),
+                        costReduction.toFixed(2),
+                        costReductionPercent + '%',
+                        roleCosts[0].tradCost,
+                        roleCosts[0].bcCost,
+                        roleCosts[0].reduction + '%',
+                        roleCosts[1].tradCost,
+                        roleCosts[1].bcCost,
+                        roleCosts[1].reduction + '%',
+                        roleCosts[2].tradCost,
+                        roleCosts[2].bcCost,
+                        roleCosts[2].reduction + '%',
+                        roleCosts[3].tradCost,
+                        roleCosts[3].bcCost,
+                        roleCosts[3].reduction + '%'
+                    ];
+                    
+                    summaryData.push(row);
+                }
+                
+                // Create worksheet with the data
+                const ws = XLSX.utils.aoa_to_sheet(summaryData);
+                
+                // Set column widths
+                const columnWidths = summaryData[0].map((_, i) => ({ wch: i === 0 ? 30 : 18 }));
+                ws['!cols'] = columnWidths;
+                
+                // Format the headers as bold
+                const range = XLSX.utils.decode_range(ws['!ref']);
+                for (let C = range.s.c; C <= range.e.c; ++C) {
+                    const cellRef = XLSX.utils.encode_cell({r: 0, c: C});
+                    if (!ws[cellRef]) continue;
+                    if (!ws[cellRef].s) ws[cellRef].s = {};
+                    ws[cellRef].s.font = { bold: true };
+                }
+                
+                // Add worksheet to workbook as the first sheet
+                XLSX.utils.book_append_sheet(workbook, ws, 'Experiment Comparison', true);
+                
+                return true;
+            } catch (error) {
+                console.error('Error creating comparison sheet:', error);
+                return false;
+            }
+        }
+        
+        // Create a cost summary sheet for a single experiment
+        function createCostSummarySheet(workbook, experimentKey, blockchainData, traditionalData) {
+            try {
+                const finalWeek = Math.min(blockchainData.length - 1, traditionalData.length - 1);
+                const data = [];
+                
+                // Add header row
+                const headers = [
+                    'Role', 
+                    'Traditional Cost', 
+                    'Blockchain Cost', 
+                    'Difference', 
+                    'Change (%)'
+                ];
+                data.push(headers);
+                
+                // Add data for each role (operational costs only - from cumulativeCost)
+                let totalTraditional = 0;
+                let totalBlockchain = 0;
+                
+                for (let i = 0; i < roles.length; i++) {
+                    const tradCost = traditionalData[finalWeek].cumulativeCost[i];
+                    const bcCost = blockchainData[finalWeek].cumulativeCost[i];
+                    const difference = tradCost - bcCost;
+                    const percentChange = ((difference / tradCost) * 100).toFixed(2);
+                    
+                    totalTraditional += tradCost;
+                    totalBlockchain += bcCost;
+                    
+                    const row = [
+                        roles[i].name,
+                        tradCost.toFixed(2),
+                        bcCost.toFixed(2),
+                        difference.toFixed(2),
+                        percentChange + '%'
+                    ];
+                    
+                    data.push(row);
+                }
+                
+                // Add total row
+                const totalDifference = totalTraditional - totalBlockchain;
+                const totalPercentChange = ((totalDifference / totalTraditional) * 100).toFixed(2);
+                
+                const totalRow = [
+                    'Total',
+                    totalTraditional.toFixed(2),
+                    totalBlockchain.toFixed(2),
+                    totalDifference.toFixed(2),
+                    totalPercentChange + '%'
+                ];
+                
+                data.push(totalRow);
+                
+                // Create worksheet
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                
+                // Set column widths
+                const columnWidths = [
+                    { wch: 15 }, // Role
+                    { wch: 18 }, // Traditional Cost
+                    { wch: 18 }, // Blockchain Cost
+                    { wch: 15 }, // Difference
+                    { wch: 15 }, // Change (%)
+                ];
+                ws['!cols'] = columnWidths;
+                
+                // Format headers and total row as bold
+                const range = XLSX.utils.decode_range(ws['!ref']);
+                // Bold headers
+                for (let C = range.s.c; C <= range.e.c; ++C) {
+                    const headerCell = XLSX.utils.encode_cell({r: 0, c: C});
+                    if (!ws[headerCell]) continue;
+                    if (!ws[headerCell].s) ws[headerCell].s = {};
+                    ws[headerCell].s.font = { bold: true };
+                    
+                    // Bold total row
+                    const totalCell = XLSX.utils.encode_cell({r: data.length - 1, c: C});
+                    if (!ws[totalCell]) continue;
+                    if (!ws[totalCell].s) ws[totalCell].s = {};
+                    ws[totalCell].s.font = { bold: true };
+                }
+                
+                // Sanitize experiment name for Excel (max 31 chars)
+                const sheetName = `${experimentKey.substring(0, 20)}_Cost_Summary`.substring(0, 31);
+                
+                // Add worksheet to workbook
+                XLSX.utils.book_append_sheet(workbook, ws, sheetName);
+                
+                return true;
+            } catch (error) {
+                console.error(`Error creating cost summary for ${experimentKey}:`, error);
+                return false;
+            }
+        }
+        
+        // Render simulation summary
+        function renderSummary(summary, simulationType) {
+            if (!summary) return;
+            
+            const container = document.getElementById('summaryContainer');
+            const settings = dataPaths[simulationType].settings;
+            
+            // Clear container
+            container.innerHTML = '';
+            
+            // Add settings information
+            const settingsDiv = document.createElement('div');
+            settingsDiv.className = 'simulation-settings';
+            settingsDiv.style.marginBottom = '20px';
+            
+            settingsDiv.innerHTML = `
+                <h4>Simulation Settings</h4>
+                <table class="comparison-table">
+                    <tbody>
+                        <tr>
+                            <td><strong>Description:</strong></td>
+                            <td>${settings.description}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Order Delay:</strong></td>
+                            <td>${settings.orderDelay} ${settings.orderDelay === 1 ? 'week' : 'weeks'}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Shipping Delay:</strong></td>
+                            <td>${settings.shippingDelay} ${settings.shippingDelay === 1 ? 'week' : 'weeks'}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hybrid Roles:</strong></td>
+                            <td>${settings.hybridRoles.length > 0 ? settings.hybridRoles.join(', ') : 'None'}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            container.appendChild(settingsDiv);
+            
+            // Create results table
+            const table = document.createElement('table');
+            table.className = 'comparison-table';
+            
+            // Create table header
+            const tableHeader = document.createElement('thead');
+            tableHeader.innerHTML = `
+                <tr>
+                    <th>Periods</th>
+                    <th>Traditional Cost</th>
+                    <th>Blockchain Cost</th>
+                    <th>Cost Reduction</th>
+                    <th>Cost Reduction %</th>
+                </tr>
+            `;
+            table.appendChild(tableHeader);
+            
+            // Create table body
+            const tableBody = document.createElement('tbody');
+            tableBody.innerHTML = `
+                <tr>
+                    <td>${summary.Periods}</td>
+                    <td>${summary.TraditionalCost}</td>
+                    <td>${summary.BlockchainCost}</td>
+                    <td>${summary.CostReduction}</td>
+                    <td>${summary.CostReductionPercent}%</td>
+                </tr>
+            `;
+            table.appendChild(tableBody);
+            
+            // Add results table to container
+            container.appendChild(table);
+        }
+        
+        // Render charts for orders, inventory, and costs
+        function renderCharts(blockchainData, traditionalData) {
+            if (!blockchainData || !traditionalData) {
+                console.error("Cannot render charts: data is not available");
+                return;
+            }
+            
+            // Get the maximum values for consistent y-axis scaling
+            let maxInventory, maxBacklog, maxOrders, maxShipments;
+            
+            // For traditional data
+            if (traditionalData && traditionalData.length > 0) {
+                maxInventory = d3.max(traditionalData, d => {
+                    if (!d.inventory || !Array.isArray(d.inventory)) return 0;
+                    return Math.max(
+                        d3.max(d.inventory, val => val || 0) || 0
+                    );
+                });
+                
+                maxBacklog = d3.max(traditionalData, d => {
+                    if (!d.backlog || !Array.isArray(d.backlog)) return 0;
+                    return Math.max(
+                        d3.max(d.backlog, val => val || 0) || 0
+                    );
+                });
+                
+                maxOrders = d3.max(traditionalData, d => {
+                    if (!d.orders || !Array.isArray(d.orders)) return 0;
+                    return Math.max(
+                        d3.max(d.orders, val => val || 0) || 0
+                    );
+                });
+                
+                maxShipments = d3.max(traditionalData, d => {
+                    if (!d.incoming || !Array.isArray(d.incoming)) return 0;
+                    return Math.max(
+                        d3.max(d.incoming, val => val || 0) || 0
+                    );
+                });
+            } else {
+                maxInventory = 0;
+                maxBacklog = 0;
+                maxOrders = 0;
+                maxShipments = 0;
+            }
+            
+            // For blockchain data - use the same scale as traditional for comparison
+            if (blockchainData && blockchainData.length > 0) {
+                maxInventory = Math.max(maxInventory || 0, d3.max(blockchainData, d => {
+                    if (!d.inventory || !Array.isArray(d.inventory)) return 0;
+                    return Math.max(
+                        d3.max(d.inventory, val => val || 0) || 0
+                    );
+                }));
+                
+                maxBacklog = Math.max(maxBacklog || 0, d3.max(blockchainData, d => {
+                    if (!d.backlog || !Array.isArray(d.backlog)) return 0;
+                    return Math.max(
+                        d3.max(d.backlog, val => val || 0) || 0
+                    );
+                }));
+                
+                maxOrders = Math.max(maxOrders || 0, d3.max(blockchainData, d => {
+                    if (!d.orders || !Array.isArray(d.orders)) return 0;
+                    return Math.max(
+                        d3.max(d.orders, val => val || 0) || 0
+                    );
+                }));
+                
+                maxShipments = Math.max(maxShipments || 0, d3.max(blockchainData, d => {
+                    if (!d.incoming || !Array.isArray(d.incoming)) return 0;
+                    return Math.max(
+                        d3.max(d.incoming, val => val || 0) || 0
+                    );
+                }));
+            }
+            
+            // Use reasonable defaults if we couldn't get max values
+            maxInventory = maxInventory || 20;
+            maxBacklog = maxBacklog || 20;
+            maxOrders = maxOrders || 20;
+            maxShipments = maxShipments || 20;
+            
+            // Add 10% padding to the max values for better visualization
+            maxInventory = Math.ceil(maxInventory * 1.1);
+            maxBacklog = Math.ceil(maxBacklog * 1.1);
+            maxOrders = Math.ceil(maxOrders * 1.1);
+            maxShipments = Math.ceil(maxShipments * 1.1);
+            
+            // Calculate shared max values for y-axes across both datasets
+            // For orders
+            const maxOrderValue = maxOrders;
+            
+            // For inventory
+            const inventoryYDomain = [0, maxInventory];
+            
+            // For backlog
+            const maxBacklogValue = maxBacklog;
+            
+            // Render charts with shared y-axes
+            if (traditionalData && traditionalData.length > 0) {
+                renderOrdersChartTraditional(traditionalData, maxOrderValue);
+                renderInventoryChartTraditional(traditionalData, inventoryYDomain);
+                renderBacklogChartTraditional(traditionalData, maxBacklogValue);
+            }
+            
+            if (blockchainData && blockchainData.length > 0) {
+                renderOrdersChartBlockchain(blockchainData, maxOrderValue);
+                renderInventoryChartBlockchain(blockchainData, inventoryYDomain);
+                renderBacklogChartBlockchain(blockchainData, maxBacklogValue);
+            }
+            
+            // Render comparison chart if both datasets are available
+            if (traditionalData && traditionalData.length > 0 && 
+                blockchainData && blockchainData.length > 0) {
+                renderCostsChart(blockchainData, traditionalData);
+            }
+        }
+        
+        // Render orders chart for traditional data
+        function renderOrdersChartTraditional(data, maxYValue) {
+            const container = document.getElementById('ordersChartTraditional');
+            container.innerHTML = '';
+            
+            // Set up SVG
+            const margin = {top: 20, right: 80, bottom: 30, left: 50};
+            const width = container.clientWidth - margin.left - margin.right;
+            const height = container.clientHeight - margin.top - margin.bottom;
+            
+            const svg = d3.select('#ordersChartTraditional')
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+            
+            // Define scales
+            const x = d3.scaleLinear()
+                .domain([0, data.length - 1])
+                .range([0, width]);
+                
+            const y = d3.scaleLinear()
+                .domain([0, maxYValue]) // Use shared maximum value
+                .range([height, 0]);
+            
+            // Add X axis
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat(d => `Week ${d}`))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-45)");
+            
+            // Add Y axis
+            svg.append('g')
+                .call(d3.axisLeft(y));
+            
+            // Add Y axis label
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 0 - margin.left)
+                .attr('x', 0 - (height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .text('Orders');
+            
+            // Create line generator
+            const line = d3.line()
+                .x((d, i) => x(i))
+                .y(d => y(d));
+            
+            // Draw lines for each role
+            roles.forEach(role => {
+                const ordersData = data.map(d => d.orders[role.id]);
+                
+                svg.append('path')
+                    .datum(ordersData)
+                    .attr('fill', 'none')
+                    .attr('stroke', role.color)
+                    .attr('stroke-width', 2)
+                    .attr('d', line);
+            });
+            
+            // Add legend
+            const legend = svg.append('g')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', 10)
+                .attr('text-anchor', 'end')
+                .selectAll('g')
+                .data(roles) // Remove customer demand from legend
+                .enter().append('g')
+                .attr('transform', (d, i) => `translate(0,${i * 20})`);
+            
+            legend.append('rect')
+                .attr('x', width + 20)
+                .attr('width', 19)
+                .attr('height', 19)
+                .attr('fill', d => d.color);
+            
+            legend.append('text')
+                .attr('x', width + 15)
+                .attr('y', 9.5)
+                .attr('dy', '0.32em')
+                .text(d => d.name);
+        }
+        
+        // Render orders chart for blockchain data
+        function renderOrdersChartBlockchain(data, maxYValue) {
+            const container = document.getElementById('ordersChartBlockchain');
+            container.innerHTML = '';
+            
+            // Set up SVG
+            const margin = {top: 20, right: 80, bottom: 30, left: 50};
+            const width = container.clientWidth - margin.left - margin.right;
+            const height = container.clientHeight - margin.top - margin.bottom;
+            
+            const svg = d3.select('#ordersChartBlockchain')
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+            
+            // Define scales
+            const x = d3.scaleLinear()
+                .domain([0, data.length - 1])
+                .range([0, width]);
+                
+            const y = d3.scaleLinear()
+                .domain([0, maxYValue]) // Use shared maximum value
+                .range([height, 0]);
+            
+            // Add X axis
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat(d => `Week ${d}`))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-45)");
+            
+            // Add Y axis
+            svg.append('g')
+                .call(d3.axisLeft(y));
+            
+            // Add Y axis label
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 0 - margin.left)
+                .attr('x', 0 - (height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .text('Orders');
+            
+            // Create line generator
+            const line = d3.line()
+                .x((d, i) => x(i))
+                .y(d => y(d));
+            
+            // Draw lines for each role
+            roles.forEach(role => {
+                const ordersData = data.map(d => d.orders[role.id]);
+                
+                svg.append('path')
+                    .datum(ordersData)
+                    .attr('fill', 'none')
+                    .attr('stroke', role.color)
+                    .attr('stroke-width', 2)
+                    .attr('d', line);
+            });
+            
+            // Add legend
+            const legend = svg.append('g')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', 10)
+                .attr('text-anchor', 'end')
+                .selectAll('g')
+                .data(roles) // Remove customer demand from legend
+                .enter().append('g')
+                .attr('transform', (d, i) => `translate(0,${i * 20})`);
+            
+            legend.append('rect')
+                .attr('x', width + 20)
+                .attr('width', 19)
+                .attr('height', 19)
+                .attr('fill', d => d.color);
+            
+            legend.append('text')
+                .attr('x', width + 15)
+                .attr('y', 9.5)
+                .attr('dy', '0.32em')
+                .text(d => d.name);
+        }
+        
+        // Render inventory chart for traditional data
+        function renderInventoryChartTraditional(data, yDomain) {
+            const container = document.getElementById('inventoryChartTraditional');
+            container.innerHTML = '';
+            
+            // Set up SVG
+            const margin = {top: 20, right: 80, bottom: 30, left: 50};
+            const width = container.clientWidth - margin.left - margin.right;
+            const height = container.clientHeight - margin.top - margin.bottom;
+            
+            const svg = d3.select('#inventoryChartTraditional')
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+            
+            // Define scales
+            const x = d3.scaleLinear()
+                .domain([0, data.length - 1])
+                .range([0, width]);
+                
+            const y = d3.scaleLinear()
+                .domain(yDomain) // Use shared Y domain
+                .range([height, 0]);
+            
+            // Add X axis
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat(d => `Week ${d}`))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-45)");
+            
+            // Add Y axis
+            svg.append('g')
+                .call(d3.axisLeft(y));
+            
+            // Add Y axis label
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 0 - margin.left)
+                .attr('x', 0 - (height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .text('Inventory');
+            
+            // Add zero line
+            svg.append('line')
+                .attr('x1', 0)
+                .attr('y1', y(0))
+                .attr('x2', width)
+                .attr('y2', y(0))
+                .attr('stroke', '#999')
+                .attr('stroke-dasharray', '3,3');
+            
+            // Create line generator
+            const line = d3.line()
+                .x((d, i) => x(i))
+                .y(d => y(d));
+            
+            // Draw lines for each role
+            roles.forEach(role => {
+                const inventoryData = data.map(d => d.inventory[role.id]);
+                
+                svg.append('path')
+                    .datum(inventoryData)
+                    .attr('fill', 'none')
+                    .attr('stroke', role.color)
+                    .attr('stroke-width', 2)
+                    .attr('d', line);
+            });
+            
+            // Add legend
+            const legend = svg.append('g')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', 10)
+                .attr('text-anchor', 'end')
+                .selectAll('g')
+                .data(roles)
+                .enter().append('g')
+                .attr('transform', (d, i) => `translate(0,${i * 20})`);
+            
+            legend.append('rect')
+                .attr('x', width + 20)
+                .attr('width', 19)
+                .attr('height', 19)
+                .attr('fill', d => d.color);
+            
+            legend.append('text')
+                .attr('x', width + 15)
+                .attr('y', 9.5)
+                .attr('dy', '0.32em')
+                .text(d => d.name);
+        }
+        
+        // Render inventory chart for blockchain data
+        function renderInventoryChartBlockchain(data, yDomain) {
+            const container = document.getElementById('inventoryChartBlockchain');
+            container.innerHTML = '';
+            
+            // Set up SVG
+            const margin = {top: 20, right: 80, bottom: 30, left: 50};
+            const width = container.clientWidth - margin.left - margin.right;
+            const height = container.clientHeight - margin.top - margin.bottom;
+            
+            const svg = d3.select('#inventoryChartBlockchain')
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+            
+            // Define scales
+            const x = d3.scaleLinear()
+                .domain([0, data.length - 1])
+                .range([0, width]);
+                
+            const y = d3.scaleLinear()
+                .domain(yDomain) // Use shared Y domain
+                .range([height, 0]);
+            
+            // Add X axis
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat(d => `Week ${d}`))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-45)");
+            
+            // Add Y axis
+            svg.append('g')
+                .call(d3.axisLeft(y));
+            
+            // Add Y axis label
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 0 - margin.left)
+                .attr('x', 0 - (height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .text('Inventory');
+            
+            // Add zero line
+            svg.append('line')
+                .attr('x1', 0)
+                .attr('y1', y(0))
+                .attr('x2', width)
+                .attr('y2', y(0))
+                .attr('stroke', '#999')
+                .attr('stroke-dasharray', '3,3');
+            
+            // Create line generator
+            const line = d3.line()
+                .x((d, i) => x(i))
+                .y(d => y(d));
+            
+            // Draw lines for each role
+            roles.forEach(role => {
+                const inventoryData = data.map(d => d.inventory[role.id]);
+                
+                svg.append('path')
+                    .datum(inventoryData)
+                    .attr('fill', 'none')
+                    .attr('stroke', role.color)
+                    .attr('stroke-width', 2)
+                    .attr('d', line);
+            });
+            
+            // Add legend
+            const legend = svg.append('g')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', 10)
+                .attr('text-anchor', 'end')
+                .selectAll('g')
+                .data(roles)
+                .enter().append('g')
+                .attr('transform', (d, i) => `translate(0,${i * 20})`);
+            
+            legend.append('rect')
+                .attr('x', width + 20)
+                .attr('width', 19)
+                .attr('height', 19)
+                .attr('fill', d => d.color);
+            
+            legend.append('text')
+                .attr('x', width + 15)
+                .attr('y', 9.5)
+                .attr('dy', '0.32em')
+                .text(d => d.name);
+        }
+        
+        // Render backlog chart for traditional data
+        function renderBacklogChartTraditional(data, maxYValue) {
+            const container = document.getElementById('backlogChartTraditional');
+            container.innerHTML = '';
+            
+            // Set up SVG
+            const margin = {top: 20, right: 80, bottom: 30, left: 50};
+            const width = container.clientWidth - margin.left - margin.right;
+            const height = container.clientHeight - margin.top - margin.bottom;
+            
+            const svg = d3.select('#backlogChartTraditional')
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+            
+            // Define scales
+            const x = d3.scaleLinear()
+                .domain([0, data.length - 1])
+                .range([0, width]);
+                
+            const y = d3.scaleLinear()
+                .domain([0, maxYValue]) // Use shared maximum value
+                .range([height, 0]);
+            
+            // Add X axis
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat(d => `Week ${d}`))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-45)");
+            
+            // Add Y axis
+            svg.append('g')
+                .call(d3.axisLeft(y));
+            
+            // Add Y axis label
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 0 - margin.left)
+                .attr('x', 0 - (height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .text('Backlog');
+            
+            // Create line generator
+            const line = d3.line()
+                .x((d, i) => x(i))
+                .y(d => y(d));
+            
+            // Draw lines for each role
+            roles.forEach(role => {
+                const backlogData = data.map(d => d.backlog[role.id]);
+                
+                svg.append('path')
+                    .datum(backlogData)
+                    .attr('fill', 'none')
+                    .attr('stroke', role.color)
+                    .attr('stroke-width', 2)
+                    .attr('d', line);
+            });
+            
+            // Add legend
+            const legend = svg.append('g')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', 10)
+                .attr('text-anchor', 'end')
+                .selectAll('g')
+                .data(roles)
+                .enter().append('g')
+                .attr('transform', (d, i) => `translate(0,${i * 20})`);
+            
+            legend.append('rect')
+                .attr('x', width + 20)
+                .attr('width', 19)
+                .attr('height', 19)
+                .attr('fill', d => d.color);
+            
+            legend.append('text')
+                .attr('x', width + 15)
+                .attr('y', 9.5)
+                .attr('dy', '0.32em')
+                .text(d => d.name);
+        }
+        
+        // Render backlog chart for blockchain data
+        function renderBacklogChartBlockchain(data, maxYValue) {
+            const container = document.getElementById('backlogChartBlockchain');
+            container.innerHTML = '';
+            
+            // Set up SVG
+            const margin = {top: 20, right: 80, bottom: 30, left: 50};
+            const width = container.clientWidth - margin.left - margin.right;
+            const height = container.clientHeight - margin.top - margin.bottom;
+            
+            const svg = d3.select('#backlogChartBlockchain')
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+            
+            // Define scales
+            const x = d3.scaleLinear()
+                .domain([0, data.length - 1])
+                .range([0, width]);
+                
+            const y = d3.scaleLinear()
+                .domain([0, maxYValue]) // Use shared maximum value
+                .range([height, 0]);
+            
+            // Add X axis
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat(d => `Week ${d}`))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-45)");
+            
+            // Add Y axis
+            svg.append('g')
+                .call(d3.axisLeft(y));
+            
+            // Add Y axis label
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 0 - margin.left)
+                .attr('x', 0 - (height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .text('Backlog');
+            
+            // Create line generator
+            const line = d3.line()
+                .x((d, i) => x(i))
+                .y(d => y(d));
+            
+            // Draw lines for each role
+            roles.forEach(role => {
+                const backlogData = data.map(d => d.backlog[role.id]);
+                
+                svg.append('path')
+                    .datum(backlogData)
+                    .attr('fill', 'none')
+                    .attr('stroke', role.color)
+                    .attr('stroke-width', 2)
+                    .attr('d', line);
+            });
+            
+            // Add legend
+            const legend = svg.append('g')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', 10)
+                .attr('text-anchor', 'end')
+                .selectAll('g')
+                .data(roles)
+                .enter().append('g')
+                .attr('transform', (d, i) => `translate(0,${i * 20})`);
+            
+            legend.append('rect')
+                .attr('x', width + 20)
+                .attr('width', 19)
+                .attr('height', 19)
+                .attr('fill', d => d.color);
+            
+            legend.append('text')
+                .attr('x', width + 15)
+                .attr('y', 9.5)
+                .attr('dy', '0.32em')
+                .text(d => d.name);
+        }
+        
+        // Render costs chart
+        function renderCostsChart(blockchainData, traditionalData) {
+            const container = document.getElementById('costsChart');
+            container.innerHTML = '';
+            
+            // Check if data exists
+            if (!blockchainData || !traditionalData) {
+                container.innerHTML = '<p>Cost data not available</p>';
+                return;
+            }
+            
+            // Set up SVG
+            const margin = {top: 20, right: 80, bottom: 30, left: 50};
+            const width = container.clientWidth - margin.left - margin.right;
+            const height = container.clientHeight - margin.top - margin.bottom;
+            
+            const svg = d3.select('#costsChart')
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+            
+            // Calculate total cost per week (sum of all roles)
+            const blockchainWeeklyCosts = blockchainData.map(week => 
+                week.operationalCost.reduce((sum, cost) => sum + cost, 0)
+            );
+            
+            let traditionalWeeklyCosts = [];
+            if (traditionalData) {
+                traditionalWeeklyCosts = traditionalData.map(week => 
+                    week.operationalCost.reduce((sum, cost) => sum + cost, 0)
+                );
+            }
+            
+            // Find the max value for y axis scaling
+            const maxBlockchainCost = d3.max(blockchainWeeklyCosts);
+            const maxTraditionalCost = traditionalData ? d3.max(traditionalWeeklyCosts) : 0;
+            const maxCost = Math.max(maxBlockchainCost, maxTraditionalCost);
+            
+            // Define scales
+            const x = d3.scaleLinear()
+                .domain([0, blockchainData.length - 1])
+                .range([0, width]);
+                
+            const y = d3.scaleLinear()
+                .domain([0, maxCost * 1.2])
+                .range([height, 0]);
+            
+            // Add X axis
+            svg.append('g')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat(d => `Week ${d}`))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-45)");
+            
+            // Add Y axis
+            svg.append('g')
+                .call(d3.axisLeft(y));
+            
+            // Add Y axis label
+            svg.append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 0 - margin.left)
+                .attr('x', 0 - (height / 2))
+                .attr('dy', '1em')
+                .style('text-anchor', 'middle')
+                .text('Operational Costs');
+            
+            // Create line generator
+            const line = d3.line()
+                .x((d, i) => x(i))
+                .y(d => y(d));
+            
+            // Draw blockchain cost line if needed
+            if (maxBlockchainCost > 0) {
+                svg.append('path')
+                    .datum(blockchainWeeklyCosts)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#1f77b4')
+                    .attr('stroke-width', 2)
+                    .attr('d', line);
+            }
+            
+            // Draw traditional cost line if needed
+            if (maxTraditionalCost > 0) {
+                svg.append('path')
+                    .datum(traditionalWeeklyCosts)
+                    .attr('fill', 'none')
+                    .attr('stroke', '#d62728')
+                    .attr('stroke-width', 2)
+                    .attr('d', line);
+            }
+            
+            // Create legend entries based on display mode
+            const legendEntries = [];
+            if (maxBlockchainCost > 0) {
+                legendEntries.push({name: 'Blockchain Operational Costs', color: '#1f77b4'});
+            }
+            if (maxTraditionalCost > 0) {
+                legendEntries.push({name: 'Traditional Operational Costs', color: '#d62728'});
+            }
+            
+            // Add legend
+            const legend = svg.append('g')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', 10)
+                .attr('text-anchor', 'end')
+                .selectAll('g')
+                .data(legendEntries)
+                .enter().append('g')
+                .attr('transform', (d, i) => `translate(0,${i * 20})`);
+            
+            legend.append('rect')
+                .attr('x', width + 20)
+                .attr('width', 19)
+                .attr('height', 19)
+                .attr('fill', d => d.color);
+            
+            legend.append('text')
+                .attr('x', width + 15)
+                .attr('y', 9.5)
+                .attr('dy', '0.32em')
+                .text(d => d.name);
+        }
+        
+        // Initialize with standard simulation
+        loadSimulationData('standard');
+        
+        // Set up event listener for simulation type selection
+        document.getElementById('simulationTypeSelect').addEventListener('change', function() {
+            loadSimulationData(this.value);
+        });
+        
+        // Set up export all data button
+        document.getElementById('exportAllDataButton').addEventListener('click', function() {
+            exportAllMetricsToExcel();
+        });
+        
+        // Add error handling message
+        window.addEventListener('error', function(event) {
+            console.error('Error in visualization:', event.error);
+            document.getElementById('summaryContainer').innerHTML = `
+                <div style="color: red; padding: 10px; border: 1px solid red; margin-top: 10px;">
+                    <p>There was an error loading the visualization. Please check the browser console for details.</p>
+                </div>
+            `;
+        });
+        
+        // Set up extract bullwhip data button
+        document.getElementById('extractBullwhipDataButton').addEventListener('click', function() {
+            extractBullwhipAndBenefitData();
+        });
+        
+        // Extract and format bullwhip and benefit metrics data
+        async function extractBullwhipAndBenefitData() {
+            // Show loading overlay
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            try {
+                // Create array to store all metrics data
+                const allMetricsData = [];
+                
+                // Process each experiment
+                const experimentKeys = Object.keys(dataPaths);
+                
+                for (const experimentKey of experimentKeys) {
+                    const paths = dataPaths[experimentKey];
+                    
+                    // Format scenario name as requested: {OrderDelay}-{ShippingDelay}-{HybridParticipation}
+                    let hybridParticipation = '';
+                    if (paths.settings.hybridRoles && paths.settings.hybridRoles.length > 0) {
+                        // Create string with first letter of each hybrid role
+                        hybridParticipation = paths.settings.hybridRoles.map(role => role.charAt(0)).join('');
+                    } else {
+                        hybridParticipation = 'Full'; // No hybrid roles means full traditional or blockchain
+                    }
+                    
+                    const scenarioName = `${paths.settings.orderDelay}-${paths.settings.shippingDelay}-${hybridParticipation}`;
+                    
+                    try {
+                        // Load blockchain data
+                        const blockchainResponse = await fetch(paths.blockchain);
+                        const blockchainData = await blockchainResponse.json();
+                        
+                        // Load traditional data
+                        const traditionalResponse = await fetch(paths.traditional);
+                        const traditionalData = await traditionalResponse.json();
+                        
+                        // Get bullwhip ratios from the existing calculation
+                        const [traditionalBullwhipRatios, blockchainBullwhipRatios] = await Promise.all([
+                            calculateBullwhipRatios(traditionalData),
+                            calculateBullwhipRatios(blockchainData)
+                        ]);
+                        
+                        // Process each mode (Traditional and Blockchain)
+                        const modeData = [
+                            { name: 'Traditional', data: traditionalData, bullwhipRatios: traditionalBullwhipRatios },
+                            { name: 'Blockchain', data: blockchainData, bullwhipRatios: blockchainBullwhipRatios }
+                        ];
+                        
+                        for (const mode of modeData) {
+                            // For each stage (Retailer, Wholesaler, Distributor, Factory)
+                            for (let stageId = 0; stageId < roles.length; stageId++) {
+                                const stageName = roles[stageId].name;
+                                
+                                // 1. Calculate variance of orders placed
+                                const ordersPlaced = mode.data.map(week => week.orders[stageId]);
+                                const varianceOrdersPlaced = calculateVariance(ordersPlaced);
+                                
+                                // 2. Calculate variance of demand received
+                                let varianceDemandReceived = 0;
+                                if (stageId === 0) {
+                                    // For retailer, calculate demand variance from bullwhip ratio and orders variance
+                                    // Since bullwhipRatio = varianceOrdersPlaced / varianceDemandReceived
+                                    // Therefore: varianceDemandReceived = varianceOrdersPlaced / bullwhipRatio
+                                    if (mode.bullwhipRatios[stageId] > 0) {
+                                        varianceDemandReceived = varianceOrdersPlaced / mode.bullwhipRatios[stageId];
+                                    } else {
+                                        // Fallback if bullwhip ratio is 0
+                                        varianceDemandReceived = 0.001; // Small non-zero value
+                                    }
+                                } else {
+                                    // For other stages, demand is orders from downstream partner
+                                    const demandReceived = mode.data.map(week => week.orders[stageId - 1]);
+                                    varianceDemandReceived = calculateVariance(demandReceived);
+                                }
+                                
+                                // 3. Use the pre-calculated bullwhip ratio directly
+                                const bullwhipRatio = mode.bullwhipRatios[stageId];
+                                
+                                // 4. Calculate mean total costs
+                                const totalCosts = mode.data.map(week => week.operationalCost[stageId]);
+                                const meanTotalCost = totalCosts.reduce((sum, val) => sum + val, 0) / totalCosts.length;
+                                
+                                // 5. Calculate coefficient of variation (CV) of orders placed
+                                const meanOrdersPlaced = ordersPlaced.reduce((sum, val) => sum + val, 0) / ordersPlaced.length;
+                                const stdDevOrdersPlaced = Math.sqrt(varianceOrdersPlaced);
+                                const cvOrders = meanOrdersPlaced > 0 ? stdDevOrdersPlaced / meanOrdersPlaced : 0;
+                                
+                                // 6. Calculate coefficient of variation (CV) of inventory
+                                const inventory = mode.data.map(week => week.inventory[stageId]);
+                                const meanInventory = inventory.reduce((sum, val) => sum + val, 0) / inventory.length;
+                                const varianceInventory = calculateVariance(inventory);
+                                const stdDevInventory = Math.sqrt(varianceInventory);
+                                const cvInventory = meanInventory > 0 ? stdDevInventory / meanInventory : 0;
+                                
+                                // 7. Mean inventory level (already calculated)
+                                
+                                // 8. Calculate stockout rate
+                                const stockouts = inventory.filter(val => val <= 0).length;
+                                const stockoutRate = stockouts / inventory.length;
+                                
+                                // 9. Calculate mean backlog level
+                                const backlog = mode.data.map(week => week.backlog[stageId]);
+                                const meanBacklog = backlog.reduce((sum, val) => sum + val, 0) / backlog.length;
+                                
+                                // Add to metrics data array
+                                allMetricsData.push({
+                                    Scenario: scenarioName,
+                                    Stage: stageName,
+                                    Mode: mode.name,
+                                    Variance_Orders_Placed: varianceOrdersPlaced,
+                                    Variance_Demand_Received: varianceDemandReceived,
+                                    Bullwhip_Ratio: bullwhipRatio,
+                                    Mean_Total_Cost: meanTotalCost,
+                                    CV_Orders: cvOrders,
+                                    CV_Inventory: cvInventory,
+                                    Mean_Inventory: meanInventory,
+                                    Stockout_Rate: stockoutRate,
+                                    Mean_Backlog: meanBacklog
+                                });
+                            }
+                        }
+                    } catch (error) {
+                        console.error(`Error processing experiment ${experimentKey}:`, error);
+                    }
+                }
+                
+                // Display the data in a table
+                displayBullwhipDataTable(allMetricsData);
+                
+                return allMetricsData;
+            } catch (error) {
+                console.error("Error extracting bullwhip data:", error);
+                alert("An error occurred while extracting bullwhip data. Please try again.");
+                return [];
+            } finally {
+                // Hide loading overlay
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }
+        }
+        
+        // Display bullwhip data in a table
+        function displayBullwhipDataTable(data) {
+            const container = document.getElementById('bullwhipDataContainer');
+            container.innerHTML = '';
+            
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p>No data available to display.</p>';
+                return;
+            }
+            
+            // Create download button
+            const downloadButton = document.createElement('button');
+            downloadButton.className = 'download-csv-button';
+            downloadButton.textContent = 'Download as CSV';
+            downloadButton.onclick = function() {
+                downloadBullwhipDataCsv(data);
+            };
+            container.appendChild(downloadButton);
+            
+            // Create table container
+            const tableContainer = document.createElement('div');
+            tableContainer.className = 'metrics-table-container';
+            
+            // Create table
+            const table = document.createElement('table');
+            table.className = 'metrics-table';
+            
+            // Create table header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            
+            // Add headers
+            const headers = Object.keys(data[0]);
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header.replace(/_/g, ' ');
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Create table body
+            const tbody = document.createElement('tbody');
+            
+            // Add data rows
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    
+                    // Format numbers with appropriate precision
+                    if (typeof row[header] === 'number') {
+                        if (header === 'Stockout_Rate') {
+                            // Format as percentage
+                            td.textContent = (row[header] * 100).toFixed(2) + '%';
+                        } else if (header.includes('Variance') || header === 'Bullwhip_Ratio') {
+                            // Higher precision for variance and bullwhip ratio
+                            td.textContent = row[header].toFixed(3);
+                        } else {
+                            // Standard precision for other metrics
+                            td.textContent = row[header].toFixed(2);
+                        }
+                    } else {
+                        td.textContent = row[header];
+                    }
+                    
+                    tr.appendChild(td);
+                });
+                
+                tbody.appendChild(tr);
+            });
+            
+            table.appendChild(tbody);
+            tableContainer.appendChild(table);
+            container.appendChild(tableContainer);
+        }
+        
+        // Function to download bullwhip data as CSV
+        function downloadBullwhipDataCsv(data) {
+            if (!data || data.length === 0) {
+                alert('No data available to download.');
+                return;
+            }
+            
+            try {
+                // Get headers
+                const headers = Object.keys(data[0]);
+                
+                // Create CSV content
+                let csvContent = headers.join(',') + '\n';
+                
+                // Add data rows
+                data.forEach(row => {
+                    const values = headers.map(header => {
+                        // Format numbers with appropriate precision
+                        if (typeof row[header] === 'number') {
+                            return row[header].toString();
+                        } else {
+                            // Wrap text fields in quotes to handle commas
+                            return `"${row[header]}"`;
+                        }
+                    });
+                    
+                    csvContent += values.join(',') + '\n';
+                });
+                
+                // Create download link
+                const encodedUri = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent);
+                const link = document.createElement('a');
+                link.setAttribute('href', encodedUri);
+                
+                // Generate file name with date
+                const dateStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+                link.setAttribute('download', `Bullwhip_Metrics_${dateStr}.csv`);
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (error) {
+                console.error('Error downloading CSV:', error);
+                alert('An error occurred while downloading the CSV file.');
+            }
+        }
+        
+        // Function to export gas cost data as CSV
+        function exportGasDataCsv() {
+            if (!blockchainData || !blockchainData.length) {
+                alert('Gas cost data not available.');
+                return;
+            }
+            const headers = ['Week','Retailer Gas USD','Wholesaler Gas USD','Distributor Gas USD','Factory Gas USD','System Gas USD'];
+            let csvContent = headers.join(',') + '\n';
+            blockchainData.forEach((week, idx) => {
+                const row = [
+                    idx,
+                    week.gas[0] || 0,
+                    week.gas[1] || 0,
+                    week.gas[2] || 0,
+                    week.gas[3] || 0,
+                    week.systemGas || 0
+                ];
+                csvContent += row.join(',') + '\n';
+            });
+            const encodedUri = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            const dateStr = new Date().toISOString().split('T')[0];
+            link.setAttribute('download', `Gas_Costs_${currentSimulationType}_${dateStr}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Set up export gas data button
+        document.getElementById('exportGasDataButton').addEventListener('click', exportGasDataCsv);
+    </script>
+</body>
+</html> 
