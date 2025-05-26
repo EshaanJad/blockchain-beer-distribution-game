@@ -163,8 +163,7 @@ Key parameters that can be adjusted in the simulation scripts:
 
 The simulation uses two primary data sources:
 
-- `Std_Order_Quantities.csv`: Contains the customer demand data from Crocs supply chain
-- `Order_Flow_History.csv`: Historical order flow data for certain simulations
+- `5pricepoints.csv`: Contains 5 sets of the customer demand data from Crocs supply chain using price points drawn from a normal distribution
 
 ## Ordering Policy Algorithm
 
